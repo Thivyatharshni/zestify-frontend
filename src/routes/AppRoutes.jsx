@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { ROUTES } from './RouteConstants';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import ProtectedRoute from './ProtectedRoute';
 
 // Pages
 import Home from '../pages/Home';
@@ -48,17 +49,40 @@ import StaticPage from '../pages/StaticPage';
 const AppRoutes = () => {
     return (
         <Routes>
+            {/* Public Routes */}
             <Route path={ROUTES.HOME} element={<PageWrapper component={Home} />} />
             <Route path={ROUTES.LOGIN} element={<Login />} />
             <Route path={ROUTES.SIGNUP} element={<Signup />} />
             <Route path={ROUTES.SEARCH} element={<PageWrapper component={Search} />} />
             <Route path={ROUTES.RESTAURANT} element={<PageWrapper component={Restaurant} />} />
-            <Route path={ROUTES.CART} element={<PageWrapper component={Cart} />} />
-            <Route path={ROUTES.CHECKOUT} element={<PageWrapper component={Checkout} />} />
-            <Route path={ROUTES.ORDERS} element={<PageWrapper component={Orders} />} />
-            <Route path={ROUTES.ORDER_TRACKING} element={<PageWrapper component={OrderTracking} />} />
-            <Route path={ROUTES.PROFILE} element={<PageWrapper component={Profile} />} />
             <Route path="/category/:categorySlug" element={<PageWrapper component={CategoryPage} />} />
+
+            {/* Protected Routes */}
+            <Route path={ROUTES.CART} element={
+                <ProtectedRoute>
+                    <PageWrapper component={Cart} />
+                </ProtectedRoute>
+            } />
+            <Route path={ROUTES.CHECKOUT} element={
+                <ProtectedRoute>
+                    <PageWrapper component={Checkout} />
+                </ProtectedRoute>
+            } />
+            <Route path={ROUTES.ORDERS} element={
+                <ProtectedRoute>
+                    <PageWrapper component={Orders} />
+                </ProtectedRoute>
+            } />
+            <Route path={ROUTES.ORDER_TRACKING} element={
+                <ProtectedRoute>
+                    <PageWrapper component={OrderTracking} />
+                </ProtectedRoute>
+            } />
+            <Route path={ROUTES.PROFILE} element={
+                <ProtectedRoute>
+                    <PageWrapper component={Profile} />
+                </ProtectedRoute>
+            } />
 
             {/* Static Pages */}
             <Route path="/about" element={<PageWrapper component={StaticPage} />} />

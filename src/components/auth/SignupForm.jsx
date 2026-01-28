@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ROUTES } from '../../routes/RouteConstants';
 import { authApi } from '../../services/authApi';
@@ -9,6 +9,7 @@ import PasswordInput from './PasswordInput';
 const SignupForm = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -32,7 +33,10 @@ const SignupForm = () => {
             }
 
             login(user, token);
-            navigate(ROUTES.HOME);
+
+            // Redirect to return URL or home
+            const returnUrl = location.state?.returnUrl || ROUTES.HOME;
+            navigate(returnUrl, { replace: true });
         } catch (err) {
             console.error('Signup failed:', err);
             setError(typeof err === 'string' ? err : err.message || 'Signup failed. Please try again.');

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatPrice';
+import { ROUTES } from '../../routes/RouteConstants';
 import Button from '../common/Button';
 import AddonsModal from './AddonsModal';
 import { Loader2 } from 'lucide-react';
 
 const FoodItemCard = ({ item, restaurantId }) => {
     const { state, addItem, updateQuantity, removeItem } = useCart();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [adding, setAdding] = useState(false);
 
@@ -15,6 +19,14 @@ const FoodItemCard = ({ item, restaurantId }) => {
     const totalQuantity = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
 
     const handleAddClick = () => {
+        // Check authentication before allowing add to cart
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Redirect to login with return URL
+            navigate(ROUTES.LOGIN, { state: { returnUrl: location.pathname } });
+            return;
+        }
+
         // If item has addons (check item from backend or if there are any available for it)
         // For simplicity, let's assume we always try to open the modal if the backend says so
         // OR if the item is already in cart but someone wants another variation

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ROUTES } from '../../routes/RouteConstants';
 import { authApi } from '../../services/authApi';
@@ -9,6 +9,7 @@ import PasswordInput from './PasswordInput';
 const LoginForm = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -29,7 +30,10 @@ const LoginForm = () => {
             }
 
             login(user, token);
-            navigate(ROUTES.HOME);
+
+            // Redirect to return URL or home
+            const returnUrl = location.state?.returnUrl || ROUTES.HOME;
+            navigate(returnUrl, { replace: true });
         } catch (err) {
             console.error('Login failed:', err);
             setError(typeof err === 'string' ? err : err.message || 'Login failed. Please check your credentials.');
