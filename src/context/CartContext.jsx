@@ -7,14 +7,15 @@ const CartContext = createContext(null);
 const cartReducer = (state, action) => {
     switch (action.type) {
         case 'SET_CART':
+            const payload = action.payload || {};
             return {
                 ...state,
-                items: action.payload.items || [],
-                totalPrice: action.payload.totalPrice || 0,
-                totalItems: action.payload.totalItems || 0,
-                restaurantId: action.payload.restaurantId || null,
-                couponCode: action.payload.couponCode || null,
-                discount: action.payload.discount || 0,
+                items: payload.items || [],
+                totalPrice: payload.totalPrice || 0,
+                totalItems: payload.totalItems || 0,
+                restaurantId: payload.restaurantId || null,
+                couponCode: payload.couponCode || null,
+                discount: payload.discount || 0,
                 loading: false
             };
         case 'SET_LOADING':
