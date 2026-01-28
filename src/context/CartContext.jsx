@@ -51,13 +51,18 @@ export const CartProvider = ({ children }) => {
     const { user } = useAuth();
 
     const refreshCart = useCallback(async () => {
-        if (!user) return;
+        if (!user) {
+            dispatch({ type: 'CLEAR_CART' });
+            return;
+        }
         dispatch({ type: 'SET_LOADING', payload: true });
         try {
             const cartData = await cartApi.getCart();
             dispatch({ type: 'SET_CART', payload: cartData });
         } catch (error) {
             console.error("Failed to refresh cart:", error);
+            // Set empty cart on error to prevent crashes
+            dispatch({ type: 'SET_CART', payload: { items: [], totalPrice: 0, totalItems: 0 } });
         } finally {
             dispatch({ type: 'SET_LOADING', payload: false });
         }
@@ -86,27 +91,27 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-   const updateQuantity = async (menuItemId, quantity) => {
-    try {
-        const updatedCart = await cartApi.updateCartItem(menuItemId, quantity);
-        dispatch({ type: 'SET_CART', payload: updatedCart });
-        return updatedCart;
-    } catch (error) {
-        console.error("Update quantity failed:", error);
-        throw error;
-    }
-};
+    const updateQuantity = async (menuItemId, quantity) => {
+        try {
+            const updatedCart = await cartApi.updateCartItem(menuItemId, quantity);
+            dispatch({ type: 'SET_CART', payload: updatedCart });
+            return updatedCart;
+        } catch (error) {
+            console.error("Update quantity failed:", error);
+            throw error;
+        }
+    };
 
-const removeItem = async (menuItemId) => {
-    try {
-        const updatedCart = await cartApi.removeFromCart(menuItemId);
-        dispatch({ type: 'SET_CART', payload: updatedCart });
-        return updatedCart;
-    } catch (error) {
-        console.error("Remove item failed:", error);
-        throw error;
-    }
-};
+    const removeItem = async (menuItemId) => {
+        try {
+            const updatedCart = await cartApi.removeFromCart(menuItemId);
+            dispatch({ type: 'SET_CART', payload: updatedCart });
+            return updatedCart;
+        } catch (error) {
+            console.error("Remove item failed:", error);
+            throw error;
+        }
+    };
 
 
     const clearCart = async () => {
@@ -120,13 +125,13 @@ const removeItem = async (menuItemId) => {
     };
 
     const applyCoupon = ({ code, discount }) => {
-    dispatch({
-        type: 'APPLY_COUPON',
-        payload: {
-            couponCode: code,
-            discount
-        }
-     });
+        dispatch({
+            type: 'APPLY_COUPON',
+            payload: {
+                couponCode: code,
+                discount
+            }
+        });
     };
 
 
@@ -142,4 +147,10 @@ const removeItem = async (menuItemId) => {
     );
 };
 
-export const useCart = () => useContext(CartContext);
+export const useCart = () => {
+    const context = useContext(CartContext);
+    if (!context) {
+        throw new Error('useCart must be used within a CartProvider');
+    }
+    return context;
+};

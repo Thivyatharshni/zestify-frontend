@@ -8,25 +8,9 @@ import { ROUTES } from '../../routes/RouteConstants';
 import Button from './Button';
 
 const Header = () => {
-    const { state: cartState } = useCart();
-    const { user, logout } = useAuth();
-    const { location, setIsModalOpen } = useLocation();
-    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
-    const navigate = useNavigate();
-    const routerLocation = useRouterLocation();
+    const { state: cartState } = useCart() || { state: { items: [] } };
 
-    const isHome = routerLocation.pathname === ROUTES.HOME;
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    const cartItemCount = cartState.items.reduce((acc, item) => acc + item.quantity, 0);
+    const cartItemCount = (cartState?.items || []).reduce((acc, item) => acc + item.quantity, 0);
 
     const navBgClass = isHome
         ? (scrolled ? 'bg-white shadow-md border-b border-gray-100 py-4' : 'bg-transparent py-6')
