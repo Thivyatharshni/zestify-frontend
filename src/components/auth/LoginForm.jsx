@@ -63,7 +63,7 @@ const LoginForm = () => {
                                 type="tel"
                                 required
                                 pattern="[0-9]{10}"
-                                maxLength={10}
+                                maxLength={12}
                                 className="flex-1 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
                                 placeholder="9876543210"
                                 value={phoneNumber}
