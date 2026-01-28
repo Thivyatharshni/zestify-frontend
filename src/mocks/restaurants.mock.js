@@ -1,0 +1,42 @@
+export const RESTAURANTS = [
+    {
+        id: 1,
+        name: "Burger King",
+        image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500&q=80",
+        rating: 4.2,
+        deliveryTime: "25-30 mins",
+        cuisines: ["American", "Burgers", "Fast Food"],
+        location: "Downtown",
+        offers: "50% OFF up to $5",
+    },
+    {
+        id: 2,
+        name: "Pizza Hut",
+        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80",
+        rating: 3.8,
+        deliveryTime: "30-35 mins",
+        cuisines: ["Italian", "Pizzas"],
+        location: "Main Street",
+        offers: "Free Delivery",
+    },
+    {
+        id: 3,
+        name: "Sushi Master",
+        image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500&q=80",
+        rating: 4.8,
+        deliveryTime: "40-45 mins",
+        cuisines: ["Japanese", "Sushi"],
+        location: "West End",
+        offers: "20% OFF",
+    },
+    {
+        id: 4,
+        name: "Taco Bell",
+        image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&q=80",
+        rating: 4.0,
+        deliveryTime: "15-20 mins",
+        cuisines: ["Mexican", "Tacos"],
+        location: "East Side",
+        offers: null,
+    }
+];
