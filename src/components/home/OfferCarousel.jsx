@@ -13,13 +13,20 @@ const OfferCarousel = () => {
         const fetchOffers = async () => {
             try {
                 const coupons = await couponApi.getApplicableCoupons();
-                const couponsToUse = (coupons && coupons.length > 0) ? coupons : COUPONS;
+                const backendCoupons = Array.isArray(coupons) ? coupons : [];
+                const merged = [...backendCoupons];
 
-                setLanes(couponsToUse.map(c => ({
+                COUPONS.forEach(mockC => {
+                    if (!merged.find(c => c.code === mockC.code)) {
+                        merged.push(mockC);
+                    }
+                });
+
+                setLanes(merged.map(c => ({
                     id: c.code,
                     image: c.image || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=95",
                     title: c.title || "Exclusive Offer",
-                    description: c.description || `Get ${c.discount}% off!`
+                    description: c.description || `Get ${c.discount || c.value}% off!`
                 })));
             } catch (error) {
                 console.error("Failed to fetch offers:", error);

@@ -11,16 +11,46 @@ const RestaurantGrid = ({ activeFilters }) => {
         const fetchRestaurants = async () => {
             setLoading(true);
             try {
-                // Map active filters to API params if necessary
-                const params = {
-                    filters: activeFilters.join(','),
-                };
-                const data = await restaurantApi.getRestaurants(params);
-                if (data.restaurants && data.restaurants.length > 0) {
-                    setRestaurants(data.restaurants);
-                } else {
-                    setRestaurants(RESTAURANTS);
-                }
+                // Map active filters to backend-specific query params
+                let params = {};
+
+                activeFilters.forEach(filter => {
+                    switch (filter) {
+                        case "Fast Delivery":
+                            params.sort = "deliveryTime";
+                            break;
+                        case "Rating 4.0+":
+                            params.minRating = 4;
+                            break;
+                        case "Pure Veg":
+                            params.isPureVeg = true;
+                            break;
+                        case "Offers":
+                            params.hasOffer = true;
+                            break;
+                        case "Rs. 300-600":
+                            params.minPrice = 300;
+                            params.maxPrice = 600;
+                            break;
+                        case "Less than Rs. 300":
+                            params.maxPrice = 300;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+                const data = await restaurantApi.getRestaurants(activeFilters);
+                const backendItems = Array.isArray(data) ? data : (data?.restaurants || []);
+
+                // Merge backend with mocks to ensure data visibility
+                const merged = [...backendItems];
+                RESTAURANTS.forEach(mockRest => {
+                    if (!merged.find(r => r.name.toLowerCase() === mockRest.name.toLowerCase())) {
+                        merged.push(mockRest);
+                    }
+                });
+
+                setRestaurants(merged);
             } catch (error) {
                 console.error("Failed to fetch restaurants:", error);
                 setRestaurants(RESTAURANTS);
@@ -43,9 +73,10 @@ const RestaurantGrid = ({ activeFilters }) => {
 
             {restaurants.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0">
-                    {restaurants.map((restaurant) => (
-                        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-                    ))}
+                    {restaurants.map((restaurant, index) => {
+                        const restaurantId = restaurant._id?.$oid || restaurant.id || `rest-${index}`;
+                        return <RestaurantCard key={restaurantId} restaurant={restaurant} />;
+                    })}
                 </div>
             ) : (
                 <div className="text-center py-12 text-gray-500">

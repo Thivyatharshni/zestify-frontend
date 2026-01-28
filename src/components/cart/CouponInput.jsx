@@ -18,7 +18,13 @@ const CouponInput = () => {
                 const applicableCoupons = await couponApi.getApplicableCoupons(
                     state.restaurantId
                 );
-                setCoupons(applicableCoupons);
+                // Filter for active and unexpired coupons
+                const activeCoupons = (applicableCoupons || []).filter(c => {
+                    const isActive = c.isActive !== false;
+                    const isNotExpired = !c.expiresAt || new Date(c.expiresAt) > new Date();
+                    return isActive && isNotExpired;
+                });
+                setCoupons(activeCoupons);
             } catch (error) {
                 console.error('Failed to fetch coupons:', error);
             }

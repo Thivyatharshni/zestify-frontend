@@ -5,6 +5,8 @@ import MenuCategory from '../components/restaurant/MenuCategory';
 import MenuSearch from '../components/restaurant/MenuSearch';
 import StickyCartPreview from '../components/restaurant/StickyCartPreview';
 import { restaurantApi } from '../services/restaurantApi';
+import { MENU_ITEMS } from '../mocks/menu.mock';
+import { RESTAURANTS } from '../mocks/restaurants.mock';
 import { Loader2 } from 'lucide-react';
 
 const Restaurant = () => {
@@ -16,10 +18,36 @@ const Restaurant = () => {
 
     const fetchMenu = useCallback(async (query = '') => {
         try {
-            const flatMenu = await restaurantApi.getMenu(id, query);
+            const data = await restaurantApi.getMenu(id, query);
+            // Handle both array and { menu: [...] } wrapper
+            let flatMenu = Array.isArray(data) ? data : (data?.menu || data?.items || []);
 
-            // Group flat menu by item.category
+            // If empty, use mockup fallback
+            if (flatMenu.length === 0) {
+                // Try matching by ID first
+                flatMenu = MENU_ITEMS.filter(item =>
+                    String(item.restaurant) === String(id) ||
+                    String(item.restaurant?.$oid) === String(id)
+                );
+
+                // If still empty, try matching by restaurant name if restaurant object is available
+                if (flatMenu.length === 0 && restaurant?.name) {
+                    const mockRest = RESTAURANTS.find(r => r.name.toLowerCase() === restaurant.name.toLowerCase());
+                    if (mockRest) {
+                        const mockId = mockRest.id || mockRest._id?.$oid;
+                        flatMenu = MENU_ITEMS.filter(item => String(item.restaurant) === String(mockId));
+                    }
+                }
+            }
+
+            // Group flat menu by item.category, ensuring IDs are normalized
             const groups = flatMenu.reduce((acc, item) => {
+                // Normalize ID
+                const itemId = item._id?.$oid || item.id;
+                if (!item.id && itemId) {
+                    item.id = itemId;
+                }
+
                 const categoryName = item.category || 'Other';
                 if (!acc[categoryName]) {
                     acc[categoryName] = [];
@@ -94,7 +122,7 @@ const Restaurant = () => {
                             <MenuCategory
                                 key={category.categoryName || idx}
                                 category={category}
-                                restaurantId={restaurant.id}
+                                restaurantId={restaurant._id?.$oid || restaurant.id}
                             />
                         ))
                     ) : (

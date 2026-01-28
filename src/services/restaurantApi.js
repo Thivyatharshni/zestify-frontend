@@ -1,4 +1,5 @@
 import api from './api';
+import { ADDONS } from '../mocks/addons.mock';
 
 export const restaurantApi = {
     getCategories: async () => {
@@ -69,7 +70,22 @@ export const restaurantApi = {
     getAddons: async (menuItemId) => {
         try {
             const response = await api.get(`/addons/${menuItemId}`);
-            return response.data; // { required: [...], optional: [...] }
+            const data = response.data;
+
+            // If data is an array, group by isRequired
+            if (Array.isArray(data) && data.length > 0) {
+                return {
+                    required: data.filter(a => a.isRequired),
+                    optional: data.filter(a => !a.isRequired)
+                };
+            }
+
+            // Fallback to mocks
+            if (ADDONS[menuItemId]) {
+                return ADDONS[menuItemId];
+            }
+
+            return data?.required ? data : { required: [], optional: [] };
         } catch (error) {
             console.error('Error fetching addons:', error);
             return { required: [], optional: [] };

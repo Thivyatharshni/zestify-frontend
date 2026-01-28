@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { restaurantApi } from '../../services/restaurantApi';
 import { CATEGORIES } from '../../mocks/categories.mock';
+import { getCategoryFallbackImage } from '../../utils/categoryUtils';
 
 const CategorySlider = () => {
     const navigate = useNavigate();
@@ -15,11 +16,18 @@ const CategorySlider = () => {
         const fetchCategories = async () => {
             try {
                 const data = await restaurantApi.getCategories();
-                if (data && data.length > 0) {
-                    setCategories(data);
-                } else {
-                    setCategories(CATEGORIES);
-                }
+                // Merge backend categories with mocks, avoiding duplicates by name
+                const backendCats = Array.isArray(data) ? data : [];
+                const merged = [...backendCats];
+
+                // Add mocks that aren't already represented by name in backend
+                CATEGORIES.forEach(mockCat => {
+                    if (!merged.find(c => c.name.toLowerCase() === mockCat.name.toLowerCase())) {
+                        merged.push(mockCat);
+                    }
+                });
+
+                setCategories(merged);
             } catch (error) {
                 console.error("Failed to fetch categories:", error);
                 setCategories(CATEGORIES);
@@ -117,9 +125,11 @@ const CategorySlider = () => {
                                         const opacity = isVisible ? 1 - Math.abs(relativeIndex) * 0.4 : 0;
                                         const scale = isVisible ? 1 - Math.abs(relativeIndex) * 0.25 : 0;
 
+                                        const catId = cat._id?.$oid || cat.id || cat.name || idx;
+
                                         return (
                                             <div
-                                                key={cat.id}
+                                                key={catId}
                                                 className="absolute left-1/2 top-1/2 transition-all duration-700 ease-in-out cursor-pointer"
                                                 style={{
                                                     transform: `translate(-50%, -50%) translateX(${xOffset}px) translateZ(${zOffset}px) rotateY(${rotation}deg) scale(${scale})`,
@@ -141,9 +151,15 @@ const CategorySlider = () => {
                                                         ${isActive ? 'shadow-[0_20px_50px_rgba(249,115,22,0.4)]' : ''}
                                                     `}>
                                                         <img
-                                                            src={cat.image}
+                                                            src={getCategoryFallbackImage(cat.name) || cat.image}
                                                             alt={cat.name}
                                                             className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                e.target.onerror = null;
+                                                                if (e.target.src !== getCategoryFallbackImage('default')) {
+                                                                    e.target.src = getCategoryFallbackImage('default');
+                                                                }
+                                                            }}
                                                         />
                                                     </div>
 

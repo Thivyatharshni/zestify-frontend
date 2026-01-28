@@ -13,10 +13,40 @@ const OrderTracking = () => {
     const fetchOrderDetails = async (showLoading = true) => {
         if (showLoading) setLoading(true);
         try {
+            if (id?.startsWith('MOCK-')) {
+                // Return mock data for the tracking demo
+                setOrder({
+                    id: id,
+                    status: 'PLACED',
+                    createdAt: new Date().toISOString(),
+                    totalPrice: 350,
+                    restaurant: {
+                        name: "Pizza Palace",
+                        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+                        location: "Indiranagar, Bangalore"
+                    }
+                });
+                return;
+            }
+
             const data = await orderApi.getOrderById(id);
             setOrder(data);
         } catch (error) {
             console.error("Failed to fetch order tracking details:", error);
+            // Even on error, if it's a mock ID we want it to stay
+            if (id?.startsWith('MOCK-')) {
+                setOrder({
+                    id: id,
+                    status: 'PLACED',
+                    createdAt: new Date().toISOString(),
+                    totalPrice: 350,
+                    restaurant: {
+                        name: "Pizza Palace",
+                        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+                        location: "Indiranagar, Bangalore"
+                    }
+                });
+            }
         } finally {
             if (showLoading) setLoading(false);
         }

@@ -36,11 +36,14 @@ const CategoryPage = () => {
                     cuisine: categoryName
                 });
 
-                if (data?.restaurants?.length > 0) {
-                    setRestaurants(data.restaurants);
+                // Handle both { restaurants: [...] } and direct array
+                const items = Array.isArray(data) ? data : (data?.restaurants || []);
+
+                if (items.length > 0) {
+                    setRestaurants(items);
                 } else {
                     const filteredMock = RESTAURANTS.filter(rest =>
-                        rest.cuisines?.includes(categoryName)
+                        Array.isArray(rest.cuisines) && rest.cuisines.includes(categoryName)
                     );
                     setRestaurants(filteredMock);
                 }
@@ -91,12 +94,15 @@ const CategoryPage = () => {
 
                 {restaurants.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {restaurants.map((restaurant) => (
-                            <RestaurantCard
-                                key={restaurant.id}
-                                restaurant={restaurant}
-                            />
-                        ))}
+                        {restaurants.map((restaurant, index) => {
+                            const restaurantId = restaurant._id?.$oid || restaurant.id || `category-rest-${index}`;
+                            return (
+                                <RestaurantCard
+                                    key={restaurantId}
+                                    restaurant={restaurant}
+                                />
+                            );
+                        })}
                     </div>
                 ) : (
                     !error && (

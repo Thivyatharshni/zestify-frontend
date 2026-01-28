@@ -1,23 +1,43 @@
 export const COUPONS = [
     {
-        code: "WELCOME50",
-        title: "50% OFF",
-        description: "Welcome to our food app! Get 50% off on your first order.",
-        discount: 50,
-        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_850,h_504/rng/md/carousel/production/8996c56858e3706037a3b34ecf9787c8"
-    },
-    {
-        code: "FREEDEL",
-        title: "FREE DELIVERY",
-        description: "Enjoy free delivery on orders above Rs. 199.",
-        discount: 0,
-        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_850,h_504/rng/md/carousel/production/73132c12d948197f5647bf35cd460773"
-    },
-    {
+        id: "PIZZA20",
         code: "PIZZA20",
-        title: "20% OFF ON PIZZAS",
-        description: "Craving pizza? Get 20% off from any pizza outlet.",
-        discount: 20,
-        image: "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_850,h_504/rng/md/carousel/production/e738d87b1ef2d14cb35767b409747805"
+        type: "PERCENT",
+        value: 20,
+        maxDiscount: 80,
+        minOrderValue: 199,
+        applicableOn: "RESTAURANT",
+        restaurant: { $oid: "697d32525c80f50a157ea6" },
+        isActive: true,
+        expiresAt: "2026-12-31T23:59:59.000Z",
+        title: "20% OFF",
+        description: "Up to ₹80 on pizzas",
+        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80"
+    },
+    {
+        id: "FIRST150",
+        code: "FIRST150",
+        type: "FLAT",
+        value: 150,
+        minOrderValue: 299,
+        applicableOn: "FIRST_ORDER",
+        isActive: true,
+        expiresAt: "2026-12-31T23:59:59.000Z",
+        title: "₹150 OFF",
+        description: "Flat discount on first order",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&q=80"
+    },
+    {
+        id: "SAVE50",
+        code: "SAVE50",
+        type: "FLAT",
+        value: 50,
+        minOrderValue: 249,
+        applicableOn: "ALL",
+        isActive: true,
+        expiresAt: "2026-12-31T23:59:59.000Z",
+        title: "₹50 OFF",
+        description: "Save more on every order",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&q=80"
     }
 ];

@@ -11,19 +11,32 @@ const AddonsModal = ({ isOpen, onClose, menuItem, onAdd }) => {
 
     useEffect(() => {
         if (isOpen && menuItem) {
-            const fetchAddons = async () => {
+            const fetchAddonsData = async () => {
                 setLoading(true);
                 try {
+                    // If menuItem already has addons (as per user example), use them
+                    if (Array.isArray(menuItem.addons) && menuItem.addons.length > 0) {
+                        setAddonsData({
+                            required: menuItem.addons.filter(a => a.isRequired),
+                            optional: menuItem.addons.filter(a => !a.isRequired)
+                        });
+                        setLoading(false);
+                        return;
+                    }
+
                     const data = await restaurantApi.getAddons(menuItem.id);
-                    setAddonsData(data);
-                    // Pre-select defaults if any (e.g. first required if multi-select not needed)
+                    // Filter for available addons only
+                    setAddonsData({
+                        required: (data.required || []).filter(a => a.isAvailable !== false),
+                        optional: (data.optional || []).filter(a => a.isAvailable !== false)
+                    });
                 } catch (error) {
                     console.error("Failed to fetch addons:", error);
                 } finally {
                     setLoading(false);
                 }
             };
-            fetchAddons();
+            fetchAddonsData();
         }
     }, [isOpen, menuItem]);
 
@@ -102,8 +115,8 @@ const AddonsModal = ({ isOpen, onClose, menuItem, onAdd }) => {
                                                 key={addon.id}
                                                 onClick={() => toggleAddon(addon, true)}
                                                 className={`flex justify-between items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${selectedAddons.find(a => a.id === addon.id)
-                                                        ? 'border-orange-500 bg-orange-50/30'
-                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
+                                                    ? 'border-orange-500 bg-orange-50/30'
+                                                    : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">
@@ -133,8 +146,8 @@ const AddonsModal = ({ isOpen, onClose, menuItem, onAdd }) => {
                                                 key={addon.id}
                                                 onClick={() => toggleAddon(addon, false)}
                                                 className={`flex justify-between items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${selectedAddons.find(a => a.id === addon.id)
-                                                        ? 'border-orange-500 bg-orange-50/30'
-                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
+                                                    ? 'border-orange-500 bg-orange-50/30'
+                                                    : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">

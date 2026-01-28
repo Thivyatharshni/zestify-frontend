@@ -37,6 +37,7 @@ const FoodItemCard = ({ item, restaurantId }) => {
         setAdding(true);
         try {
             await addItem(restaurantId, item.id, 1, selectedAddons);
+            navigate(ROUTES.CART);
         } catch (error) {
             alert("Failed to add item to cart");
         } finally {
@@ -49,6 +50,7 @@ const FoodItemCard = ({ item, restaurantId }) => {
             setAdding(true);
             try {
                 await updateQuantity(cartItems[0].menuItem, cartItems[0].quantity + 1);
+                navigate(ROUTES.CART);
             } catch (error) {
                 alert("Failed to update quantity");
             } finally {
@@ -98,7 +100,25 @@ const FoodItemCard = ({ item, restaurantId }) => {
 
             <div className="relative flex-shrink-0">
                 <div className="w-28 h-24 rounded-xl overflow-hidden bg-gray-100">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            const category = item.category || 'default';
+                            const fallbackMap = {
+                                'Biryani': 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?q=80&w=800&auto=format&fit=crop',
+                                'Pizza': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop',
+                                'Burger': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800&auto=format&fit=crop',
+                                'North Indian': 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=800&auto=format&fit=crop',
+                                'South Indian': 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=800&auto=format&fit=crop',
+                                'Chinese': 'https://images.unsplash.com/photo-1525755662778-989d052408ec?q=80&w=800&auto=format&fit=crop',
+                                'Desserts': 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=800&auto=format&fit=crop'
+                            };
+                            e.target.src = fallbackMap[category] || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop';
+                        }}
+                    />
                 </div>
 
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 shadow-lg rounded-lg bg-white min-w-[100px]">
@@ -116,10 +136,11 @@ const FoodItemCard = ({ item, restaurantId }) => {
                         <Button
                             variant="primary"
                             size="sm"
-                            className="bg-white text-green-600 border border-gray-200 hover:bg-gray-50 h-9 w-full px-6 font-bold shadow-sm uppercase text-xs"
+                            disabled={item.isAvailable === false}
+                            className={`bg-white text-green-600 border border-gray-200 hover:bg-gray-50 h-9 w-full px-6 font-bold shadow-sm uppercase text-xs ${item.isAvailable === false ? 'text-gray-400 border-gray-100 cursor-not-allowed' : ''}`}
                             onClick={handleAddClick}
                         >
-                            Add
+                            {item.isAvailable === false ? 'Sold Out' : 'Add'}
                         </Button>
                     )}
                 </div>

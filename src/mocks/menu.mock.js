@@ -1,65 +1,61 @@
-// mocks/menu.mock.js
-export const MENU_ITEMS = {
-    1: [ // Restaurant ID 1 (Burger King)
-        {
-            categoryId: 101,
-            categoryName: "Whopper",
-            items: [
-                {
-                    id: 1001,
-                    name: "Whopper Meal",
-                    price: 159,
-                    description: "Flame-grilled beef patty, topped with soft bun.",
-                    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
-                    isVeg: false,
-                    rating: 4.5,
-                    votes: 120
-                },
-                {
-                    id: 1002,
-                    name: "Veg Whopper",
-                    price: 149,
-                    description: "Veggie patty with fresh lettuce and tomatoes.",
-                    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&q=80",
-                    isVeg: true,
-                    rating: 4.2,
-                    votes: 90
-                }
-            ]
-        },
-        {
-            categoryId: 102,
-            categoryName: "Sides",
-            items: [
-                {
-                    id: 1003,
-                    name: "Fries (Medium)",
-                    price: 99,
-                    description: "Crispy salted fries.",
-                    image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500&q=80",
-                    isVeg: true,
-                    rating: 4.6,
-                    votes: 200
-                }
-            ]
-        }
-    ],
-    2: [ // Pizza Hut
-        {
-            categoryId: 201,
-            categoryName: "Pizzas",
-            items: [
-                {
-                    id: 2001,
-                    name: "Margherita",
-                    price: 299,
-                    description: "Classic cheese and tomato base.",
-                    image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&q=80",
-                    isVeg: true,
-                    rating: 4.1,
-                    votes: 50
-                }
-            ]
-        }
-    ]
-};
+export const MENU_ITEMS = [
+    {
+        id: "item-biryani-1",
+        restaurant: "biryani-junction",
+        name: "Chicken Biryani",
+        description: "Aromatic basmati rice with chicken and spices",
+        price: 299,
+        image: "https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?w=500&q=80",
+        category: "Biryani",
+        isVeg: false,
+        isAvailable: true,
+        addons: [
+            { id: "ba-1", name: "Extra Pieces (2)", price: 99, isRequired: false, isAvailable: true },
+            { id: "ba-2", name: "Extra Raita", price: 10, isRequired: false, isAvailable: true }
+        ]
+    },
+    {
+        id: "item-biryani-2",
+        restaurant: "biryani-junction",
+        name: "Veg Biryani",
+        description: "Traditional garden fresh vegetables cooked with layers of basmati rice",
+        price: 249,
+        image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500&q=80",
+        category: "Biryani",
+        isVeg: true,
+        isAvailable: true,
+        addons: [
+            { id: "ba-2", name: "Extra Raita", price: 10, isRequired: false, isAvailable: true },
+            { id: "ba-3", name: "Salad", price: 20, isRequired: false, isAvailable: true }
+        ]
+    },
+    {
+        id: "item-pizza-1",
+        restaurant: "6978d32525c80f5f0a157ea6",
+        name: "Margherita Pizza",
+        description: "Classic tomato sauce, mozzarella and fresh basil",
+        price: 199,
+        image: "https://images.unsplash.com/photo-1574071318508-1cdbad80ad38?w=500&q=80",
+        category: "Pizza",
+        isVeg: true,
+        isAvailable: true,
+        addons: [
+            { id: "pa-1", name: "Extra Cheese", price: 45, isRequired: false, isAvailable: true },
+            { id: "pa-2", name: "Jalapenos", price: 30, isRequired: false, isAvailable: true }
+        ]
+    },
+    {
+        id: "item-pizza-2",
+        restaurant: "6978d32525c80f5f0a157ea6",
+        name: "Chicken Pizza",
+        description: "Barbecue chicken, red onions and cilantro",
+        price: 299,
+        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&q=80",
+        category: "Pizza",
+        isVeg: false,
+        isAvailable: true,
+        addons: [
+            { id: "pa-1", name: "Extra Cheese", price: 45, isRequired: false, isAvailable: true }
+        ]
+    }
+];

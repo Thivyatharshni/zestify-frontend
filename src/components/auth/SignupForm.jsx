@@ -13,6 +13,7 @@ const SignupForm = () => {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -23,8 +24,8 @@ const SignupForm = () => {
         setError('');
 
         try {
-            console.log('Attempting signup with:', { name, email });
-            const response = await authApi.signup(name, email, password);
+            console.log('Attempting signup with:', { name, email, phone });
+            const response = await authApi.signup(name, email, password, phone);
             console.log('Signup response:', response);
 
             const { user, token } = response;
@@ -74,6 +75,19 @@ const SignupForm = () => {
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                />
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Phone Number</label>
+                <input
+                    type="tel"
+                    required
+                    pattern="[0-9]{10}"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                    placeholder="10-digit mobile number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                 />
             </div>
 

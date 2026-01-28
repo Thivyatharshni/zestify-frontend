@@ -2,14 +2,18 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Search as SearchIcon, Loader2 } from 'lucide-react';
 import RestaurantCard from '../components/home/RestaurantCard';
+import FoodItemCard from '../components/restaurant/FoodItemCard';
 import { restaurantApi } from '../services/restaurantApi';
 import { ROUTES } from '../routes/RouteConstants';
+import { RESTAURANTS } from '../mocks/restaurants.mock';
+import { MENU_ITEMS } from '../mocks/menu.mock';
 
 const Search = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
+    const [dishResults, setDishResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
     // Initialize search term from URL
@@ -21,13 +25,41 @@ const Search = () => {
     const performSearch = useCallback(async (query) => {
         if (!query.trim()) {
             setResults([]);
+            setDishResults([]);
             setLoading(false);
             return;
         }
         setLoading(true);
         try {
+            let backendRestaurants = [];
             const data = await restaurantApi.searchRestaurants(query);
-            setResults(data);
+            backendRestaurants = Array.isArray(data) ? data : (data?.restaurants || []);
+
+            const lowerQuery = query.toLowerCase();
+
+            // Search mocks for restaurants
+            const mockMatches = RESTAURANTS.filter(r =>
+                r.name.toLowerCase().includes(lowerQuery) ||
+                (Array.isArray(r.cuisines) && r.cuisines.some(c => c.toLowerCase().includes(lowerQuery)))
+            );
+
+            // Merge and unique by name
+            const merged = [...backendRestaurants];
+            mockMatches.forEach(m => {
+                if (!merged.find(r => r.name.toLowerCase() === m.name.toLowerCase())) {
+                    merged.push(m);
+                }
+            });
+
+            setResults(merged);
+
+            // Search dishes in mocks
+            const dishMatches = MENU_ITEMS.filter(item =>
+                item.name.toLowerCase().includes(lowerQuery) ||
+                item.category.toLowerCase().includes(lowerQuery) ||
+                (item.description && item.description.toLowerCase().includes(lowerQuery))
+            );
+            setDishResults(dishMatches);
         } catch (error) {
             console.error("Search failed:", error);
         } finally {
@@ -99,11 +131,34 @@ const Search = () => {
                             <div key={i} className="h-64 bg-gray-50 animate-pulse rounded-xl"></div>
                         ))}
                     </div>
-                ) : results.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {results.map((restaurant) => (
-                            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-                        ))}
+                ) : (results.length > 0 || dishResults.length > 0) ? (
+                    <div className="space-y-12">
+                        {results.length > 0 && (
+                            <section>
+                                <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-6">Restaurants</h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {results.map((restaurant, index) => {
+                                        const restaurantId = restaurant._id?.$oid || restaurant.id || `search-rest-${index}`;
+                                        return <RestaurantCard key={restaurantId} restaurant={restaurant} />;
+                                    })}
+                                </div>
+                            </section>
+                        )}
+
+                        {dishResults.length > 0 && (
+                            <section>
+                                <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-6">Dishes</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 bg-gray-50/50 p-6 rounded-3xl border border-gray-100">
+                                    {dishResults.map((item, index) => (
+                                        <FoodItemCard
+                                            key={item.id || index}
+                                            item={item}
+                                            restaurantId={item.restaurant?.$oid || item.restaurant}
+                                        />
+                                    ))}
+                                </div>
+                            </section>
+                        )}
                     </div>
                 ) : query ? (
                     <div className="text-center py-24">

@@ -7,7 +7,7 @@ const RestaurantHeader = ({ restaurant }) => {
     return (
         <div
             className="relative pt-12 pb-20 px-4 sm:px-6 lg:px-8 bg-cover bg-center"
-            style={{ backgroundImage: `url('/src/assets/images/restaurant-hero-light.png')` }}
+            style={{ backgroundImage: `url(${restaurant.image || '/src/assets/images/restaurant-hero-light.png'})` }}
         >
             {/* White/Light Overlay */}
             <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]"></div>
@@ -17,11 +17,13 @@ const RestaurantHeader = ({ restaurant }) => {
                 <div className="flex flex-col md:flex-row justify-between items-start gap-6">
                     <div className="space-y-3">
                         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">{restaurant.name}</h1>
-                        <p className="text-gray-700 text-base font-medium">{restaurant.cuisines.join(", ")}</p>
+                        <p className="text-gray-700 text-base font-medium">
+                            {Array.isArray(restaurant.cuisines) ? restaurant.cuisines.join(", ") : (restaurant.cuisines || "")}
+                        </p>
                         <div className="flex items-center gap-6 text-sm text-gray-600 font-semibold">
                             <div className="flex items-center gap-2 bg-white/60 px-4 py-1.5 rounded-full backdrop-blur-md border border-white shadow-sm">
                                 <MapPin size={16} className="text-orange-500" />
-                                {restaurant.location}
+                                {typeof restaurant.location === 'string' ? restaurant.location : (restaurant.area || restaurant.city || "Bangalore")}
                             </div>
                             <div className="flex items-center gap-2 bg-white/60 px-4 py-1.5 rounded-full backdrop-blur-md border border-white shadow-sm">
                                 <Clock size={16} className="text-orange-500" />

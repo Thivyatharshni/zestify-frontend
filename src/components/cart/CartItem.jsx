@@ -17,49 +17,46 @@ const CartItem = ({ item }) => {
         }
     };
 
+    const basePrice = item.price || 0;
+    const addonsPrice = (item.addons || []).reduce((sum, a) => sum + (a.price || 0), 0);
+    const unitPriceWithAddons = basePrice + addonsPrice;
+
     return (
-        <div className="flex flex-col py-4 border-b border-gray-100 last:border-0">
-            <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                    <div className={`mt-1 w-3 h-3 border flex items-center justify-center rounded-sm flex-shrink-0 ${item.isVeg ? 'border-green-600' : 'border-red-600'}`}>
+        <div className="group py-4 px-2 mb-1 transition-all duration-300 border-b border-gray-50 last:border-0 hover:bg-slate-50 rounded-xl">
+            <div className="flex items-center justify-between gap-4">
+                <div className="flex items-start gap-4 flex-1 min-w-0">
+                    <div className={`mt-1.5 w-3 h-3 border flex items-center justify-center rounded-sm flex-shrink-0 ${item.isVeg ? 'border-green-600' : 'border-red-600'}`}>
                         <div className={`w-1.5 h-1.5 rounded-full ${item.isVeg ? 'bg-green-600' : 'bg-red-600'}`} />
                     </div>
-                    <div className="space-y-1">
-                        <div className="text-sm font-bold text-gray-900 line-clamp-2">{item.name}</div>
-                        <div className="text-xs text-gray-500">{formatPrice(item.price)}</div>
+                    <div className="min-w-0">
+                        <h4 className="text-base md:text-lg font-bold text-slate-900 truncate tracking-tight">{item.name}</h4>
+                        <p className="text-xs md:text-sm text-slate-600 font-semibold mt-1">
+                            {formatPrice(unitPriceWithAddons)} per unit
+                        </p>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center h-8 border border-gray-200 rounded text-sm overflow-hidden bg-white shadow-sm">
+                <div className="flex items-center gap-4 md:gap-8 flex-shrink-0">
+                    <div className="flex items-center h-8 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all hover:border-green-200">
                         <button
-                            className="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 font-bold"
+                            className="w-8 h-full flex items-center justify-center text-slate-400 hover:text-green-600 transition-colors font-semibold text-base"
                             onClick={() => handleUpdateQuantity(item.quantity - 1)}
                         >
                             -
                         </button>
-                        <span className="w-8 h-full flex items-center justify-center text-green-600 font-extrabold">{item.quantity}</span>
+                        <span className="w-8 h-full flex items-center justify-center text-slate-900 font-bold text-sm bg-slate-50/50">{item.quantity}</span>
                         <button
-                            className="w-8 h-full flex items-center justify-center text-green-600 hover:bg-gray-50 font-bold"
+                            className="w-8 h-full flex items-center justify-center text-slate-900 hover:text-green-600 transition-colors font-semibold text-lg"
                             onClick={() => handleUpdateQuantity(item.quantity + 1)}
                         >
                             +
                         </button>
                     </div>
-                    <div className="text-sm font-bold text-gray-900 w-20 text-right">
-                        {formatPrice(item.price * item.quantity)}
+                    <div className="text-base font-bold text-slate-900 min-w-[80px] text-right">
+                        {formatPrice(unitPriceWithAddons * item.quantity)}
                     </div>
                 </div>
             </div>
-
-            {/* Display Addons */}
-            {item.addons && item.addons.length > 0 && (
-                <div className="ml-7 mt-1">
-                    <p className="text-[10px] text-gray-400 font-medium italic">
-                        {item.addons.map(a => a.name).join(', ')}
-                    </p>
-                </div>
-            )}
         </div>
     );
 };

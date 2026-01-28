@@ -18,13 +18,13 @@ export const authApi = {
         }
     },
 
-    signup: async (name, email, password) => {
+    signup: async (name, email, password, phone) => {
         try {
             const response = await api.post('/auth/signup', {
                 name,
                 email,
                 password,
-                phone: '0000000000' // Dummy value as required by backend
+                phone: phone || '0000000000'
             });
             return response.data; // { user, token }
         } catch (error) {

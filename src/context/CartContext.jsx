@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { cartApi } from '../services/cartApi';
+import { MENU_ITEMS } from '../mocks/menu.mock';
 
 const CartContext = createContext(null);
 
@@ -80,12 +81,70 @@ export const CartProvider = ({ children }) => {
     const addItem = async (restaurantId, menuItemId, quantity, addons = []) => {
         try {
             // Check restaurant lock
-            if (state.restaurantId && state.restaurantId !== restaurantId) {
-                throw new Error('Cannot add items from different restaurants. Please clear your cart first.');
+            if (state.restaurantId && state.restaurantId !== restaurantId && state.items.length > 0) {
+                if (!window.confirm('Adding items from a different restaurant will clear your current cart. Continue?')) {
+                    return;
+                }
+                try { await cartApi.clearCart(); } catch (e) { }
+                dispatch({ type: 'CLEAR_CART' });
             }
-            const updatedCart = await cartApi.addToCart(restaurantId, menuItemId, quantity, addons);
-            dispatch({ type: 'SET_CART', payload: updatedCart });
-            return updatedCart;
+
+            try {
+                const updatedCart = await cartApi.addToCart(restaurantId, menuItemId, quantity, addons);
+                dispatch({ type: 'SET_CART', payload: updatedCart });
+                return updatedCart;
+            } catch (apiError) {
+                console.warn("Backend add failed, using local fallback", apiError);
+
+                // Find item details from mocks or existing state to populate local cart
+                const itemDetails = MENU_ITEMS.find(i => i.id === menuItemId);
+                if (!itemDetails) {
+                    alert("Item details not found. Please try again.");
+                    return;
+                }
+
+                const newItem = {
+                    menuItem: menuItemId,
+                    id: menuItemId,
+                    name: itemDetails.name,
+                    price: itemDetails.price,
+                    image: itemDetails.image,
+                    quantity: quantity,
+                    addons: addons,
+                    restaurantId: restaurantId
+                };
+
+                const newItems = [...state.items];
+                const existingIndex = newItems.findIndex(i => i.menuItem === menuItemId && JSON.stringify(i.addons) === JSON.stringify(addons));
+
+                if (existingIndex > -1) {
+                    newItems[existingIndex].quantity += quantity;
+                } else {
+                    newItems.push(newItem);
+                }
+
+                const calculateCartTotals = (items) => {
+                    return items.reduce((acc, item) => {
+                        const basePrice = item.price || 0;
+                        const addonsPrice = (item.addons || []).reduce((sum, a) => sum + (a.price || 0), 0);
+                        return acc + ((basePrice + addonsPrice) * item.quantity);
+                    }, 0);
+                };
+
+                const totalItems = newItems.reduce((acc, i) => acc + i.quantity, 0);
+                const totalPrice = calculateCartTotals(newItems);
+
+                dispatch({
+                    type: 'SET_CART',
+                    payload: {
+                        items: newItems,
+                        totalPrice,
+                        totalItems,
+                        restaurantId
+                    }
+                });
+                return { items: newItems, totalPrice, totalItems, restaurantId };
+            }
         } catch (error) {
             console.error("Add item failed:", error);
             throw error;
@@ -98,8 +157,26 @@ export const CartProvider = ({ children }) => {
             dispatch({ type: 'SET_CART', payload: updatedCart });
             return updatedCart;
         } catch (error) {
-            console.error("Update quantity failed:", error);
-            throw error;
+            console.warn("Backend update failed, using local fallback");
+            const newItems = state.items.map(item =>
+                item.menuItem === menuItemId ? { ...item, quantity } : item
+            ).filter(item => item.quantity > 0);
+
+            const calculateCartTotals = (items) => {
+                return items.reduce((acc, item) => {
+                    const basePrice = item.price || 0;
+                    const addonsPrice = (item.addons || []).reduce((sum, a) => sum + (a.price || 0), 0);
+                    return acc + ((basePrice + addonsPrice) * item.quantity);
+                }, 0);
+            };
+
+            const totalItems = newItems.reduce((acc, i) => acc + i.quantity, 0);
+            const totalPrice = calculateCartTotals(newItems);
+
+            dispatch({
+                type: 'SET_CART',
+                payload: { ...state, items: newItems, totalPrice, totalItems }
+            });
         }
     };
 
@@ -109,8 +186,24 @@ export const CartProvider = ({ children }) => {
             dispatch({ type: 'SET_CART', payload: updatedCart });
             return updatedCart;
         } catch (error) {
-            console.error("Remove item failed:", error);
-            throw error;
+            console.warn("Backend remove failed, using local fallback");
+            const newItems = state.items.filter(item => item.menuItem !== menuItemId);
+
+            const calculateCartTotals = (items) => {
+                return items.reduce((acc, item) => {
+                    const basePrice = item.price || 0;
+                    const addonsPrice = (item.addons || []).reduce((sum, a) => sum + (a.price || 0), 0);
+                    return acc + ((basePrice + addonsPrice) * item.quantity);
+                }, 0);
+            };
+
+            const totalItems = newItems.reduce((acc, i) => acc + i.quantity, 0);
+            const totalPrice = calculateCartTotals(newItems);
+
+            dispatch({
+                type: 'SET_CART',
+                payload: { ...state, items: newItems, totalPrice, totalItems, restaurantId: newItems.length > 0 ? state.restaurantId : null }
+            });
         }
     };
 
