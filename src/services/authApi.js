@@ -1,42 +1,58 @@
-export const authApi = {
-    sendOtp: async (phoneNumber) => {
-        try {
-            const response = await api.post('/auth/send-otp', {
-                phone: `+91 ${phoneNumber}`
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data?.message || 'Failed to send OTP';
-        }
-    },
+import api from './api';
 
-    verifyOtp: async (phoneNumber, otp) => {
+export const authApi = {
+    login: async (email, password) => {
         try {
-            const response = await api.post('/auth/verify-otp', {
-                phone: `+91 ${phoneNumber}`,
-                otp
+            const response = await api.post('/auth/login', {
+                email,
+                password
             });
             return response.data; // { user, token }
         } catch (error) {
-            throw error.response?.data?.message || 'Invalid OTP';
+            console.error('Login error:', error);
+            const errorMessage = error.response?.data?.message
+                || error.response?.data?.error
+                || error.message
+                || 'Login failed';
+            throw errorMessage;
         }
     },
 
-    signup: async (userData) => {
+    signup: async (name, email, password) => {
         try {
             const response = await api.post('/auth/signup', {
-                ...userData,
-                phone: `+91 ${userData.phone}`
+                name,
+                email,
+                password,
+                phone: '0000000000' // Dummy value as required by backend
             });
             return response.data; // { user, token }
         } catch (error) {
-            throw error.response?.data?.message || 'Signup failed';
+            console.error('Signup error:', error);
+            const errorMessage = error.response?.data?.message
+                || error.response?.data?.error
+                || error.message
+                || 'Signup failed';
+            throw errorMessage;
         }
     },
 
     getProfile: async () => {
-        const res = await api.get('/user/profile');
-        return res.data;
+        try {
+            const response = await api.get('/profile');
+            return response.data;
+        } catch (error) {
+            throw error.response?.data?.message || 'Failed to fetch profile';
+        }
+    },
+
+    updateProfile: async (profileData) => {
+        try {
+            const response = await api.put('/profile', profileData);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data?.message || 'Failed to update profile';
+        }
     }
 };
 

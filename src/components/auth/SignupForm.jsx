@@ -2,59 +2,52 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ROUTES } from '../../routes/RouteConstants';
+import { authApi } from '../../services/authApi';
 import Button from '../common/Button';
+import PasswordInput from './PasswordInput';
 
 const SignupForm = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
-    const [referralCode, setReferralCode] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError('');
 
-        // Call API to register
-        setTimeout(async () => {
-            try {
-                const { authApi } = await import('../../services/authApi');
-                const newUser = await authApi.signup({ name, email, phone: phoneNumber, referralCode });
+        try {
+            console.log('Attempting signup with:', { name, email });
+            const response = await authApi.signup(name, email, password);
+            console.log('Signup response:', response);
 
-                login(newUser);
-                setLoading(false);
-                navigate(ROUTES.HOME);
-            } catch (error) {
-                console.error(error);
-                setLoading(false);
-                alert("Signup failed. Please try again.");
+            const { user, token } = response;
+            if (!token || !user) {
+                throw 'Invalid response from server';
             }
-        }, 1000);
+
+            login(user, token);
+            navigate(ROUTES.HOME);
+        } catch (err) {
+            console.error('Signup failed:', err);
+            setError(typeof err === 'string' ? err : err.message || 'Signup failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Phone Number</label>
-                <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-200 bg-gray-50 text-gray-500 text-sm">
-                        +91
-                    </span>
-                    <input
-                        type="tel"
-                        required
-                        pattern="[0-9]{10}"
-                        maxLength={10}
-                        className="flex-1 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
-                        placeholder="9876543210"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
+            {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg">
+                    {error}
                 </div>
-            </div>
+            )}
 
             <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Full Name</label>
@@ -81,13 +74,11 @@ const SignupForm = () => {
             </div>
 
             <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Referral Code (Optional)</label>
-                <input
-                    type="text"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all uppercase placeholder:normal-case"
-                    placeholder="ABCD12"
-                    value={referralCode}
-                    onChange={(e) => setReferralCode(e.target.value)}
+                <label className="text-sm font-medium text-gray-700">Password</label>
+                <PasswordInput
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Create a password"
                 />
             </div>
 

@@ -4,40 +4,35 @@ import { useAuth } from '../../context/AuthContext';
 import { ROUTES } from '../../routes/RouteConstants';
 import { authApi } from '../../services/authApi';
 import Button from '../common/Button';
+import PasswordInput from './PasswordInput';
 
 const LoginForm = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
-    const [step, setStep] = useState('PHONE'); // PHONE | OTP
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [otp, setOtp] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleSendOtp = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
         try {
-            await authApi.sendOtp(phoneNumber);
-            setStep('OTP');
-        } catch (err) {
-            setError(err.message || 'Failed to send OTP');
-        } finally {
-            setLoading(false);
-        }
-    };
+            console.log('Attempting login with:', { email });
+            const response = await authApi.login(email, password);
+            console.log('Login response:', response);
 
-    const handleVerifyOtp = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
-        try {
-            const { user, token } = await authApi.verifyOtp(phoneNumber, otp);
+            const { user, token } = response;
+            if (!token || !user) {
+                throw 'Invalid response from server';
+            }
+
             login(user, token);
             navigate(ROUTES.HOME);
         } catch (err) {
-            setError(err.message || 'Invalid OTP');
+            console.error('Login failed:', err);
+            setError(typeof err === 'string' ? err : err.message || 'Login failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }
@@ -51,62 +46,30 @@ const LoginForm = () => {
                 </div>
             )}
 
-            {step === 'PHONE' ? (
-                <form onSubmit={handleSendOtp} className="space-y-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">Phone Number</label>
-                        <div className="flex">
-                            <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-200 bg-gray-50 text-gray-500 text-sm">
-                                +91
-                            </span>
-                            <input
-                                type="tel"
-                                required
-                                pattern="[0-9]{10}"
-                                maxLength={12}
-                                className="flex-1 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
-                                placeholder="9876543210"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                    <Button type="submit" variant="primary" className="w-full h-12 text-base bg-violet-600 hover:bg-violet-700" isLoading={loading}>
-                        Get OTP
-                    </Button>
-                </form>
-            ) : (
-                <form onSubmit={handleVerifyOtp} className="space-y-4 animate-in fade-in slide-in-from-right-4">
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                            <label className="text-sm font-medium text-gray-700">Enter OTP</label>
-                            <button type="button" onClick={() => setStep('PHONE')} className="text-xs text-violet-600 hover:underline">Change Number</button>
-                        </div>
-                        <input
-    type="text"
-    required
-    maxLength={6}
-    inputMode="numeric"
-    pattern="[0-9]*"
-    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg
-               focus:outline-none focus:ring-2 focus:ring-violet-500
-               focus:border-transparent transition-all
-               text-center tracking-[0.75em] text-lg font-bold"
-    placeholder="••••••"
-    value={otp}
-    onChange={(e) => {
-        if (/^\d*$/.test(e.target.value)) {
-            setOtp(e.target.value);
-        }
-    }}
-/>
-
-                    </div>
-                    <Button type="submit" variant="primary" className="w-full h-12 text-base bg-violet-600 hover:bg-violet-700" isLoading={loading}>
-                        Verify & Login
-                    </Button>
-                </form>
-            )}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Email Address</label>
+                    <input
+                        type="email"
+                        required
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                        placeholder="name@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Password</label>
+                    <PasswordInput
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter your password"
+                    />
+                </div>
+                <Button type="submit" variant="primary" className="w-full h-12 text-base bg-violet-600 hover:bg-violet-700" isLoading={loading}>
+                    Login
+                </Button>
+            </form>
 
             <div className="text-center text-sm text-gray-600 mt-6">
                 Don't have an account? <a href={ROUTES.SIGNUP} className="text-violet-600 font-bold hover:underline">Sign up</a>
