@@ -83,14 +83,24 @@ const LoginForm = () => {
                             <button type="button" onClick={() => setStep('PHONE')} className="text-xs text-violet-600 hover:underline">Change Number</button>
                         </div>
                         <input
-                            type="text"
-                            required
-                            maxLength={4}
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-center tracking-[1em] text-lg font-bold"
-                            placeholder="••••"
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value)}
-                        />
+    type="text"
+    required
+    maxLength={6}
+    inputMode="numeric"
+    pattern="[0-9]*"
+    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg
+               focus:outline-none focus:ring-2 focus:ring-violet-500
+               focus:border-transparent transition-all
+               text-center tracking-[0.75em] text-lg font-bold"
+    placeholder="••••••"
+    value={otp}
+    onChange={(e) => {
+        if (/^\d*$/.test(e.target.value)) {
+            setOtp(e.target.value);
+        }
+    }}
+/>
+
                     </div>
                     <Button type="submit" variant="primary" className="w-full h-12 text-base bg-violet-600 hover:bg-violet-700" isLoading={loading}>
                         Verify & Login

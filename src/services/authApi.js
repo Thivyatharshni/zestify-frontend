@@ -1,18 +1,21 @@
-import api from './api';
-
 export const authApi = {
-    sendOtp: async (phone) => {
+    sendOtp: async (phoneNumber) => {
         try {
-            const response = await api.post('/auth/send-otp', { phone });
+            const response = await api.post('/auth/send-otp', {
+                phone: `+91${phoneNumber}`
+            });
             return response.data;
         } catch (error) {
             throw error.response?.data?.message || 'Failed to send OTP';
         }
     },
 
-    verifyOtp: async (phone, otp) => {
+    verifyOtp: async (phoneNumber, otp) => {
         try {
-            const response = await api.post('/auth/verify-otp', { phone, otp });
+            const response = await api.post('/auth/verify-otp', {
+                phone: `+91${phoneNumber}`,
+                otp
+            });
             return response.data; // { user, token }
         } catch (error) {
             throw error.response?.data?.message || 'Invalid OTP';
@@ -20,17 +23,9 @@ export const authApi = {
     },
 
     getProfile: async () => {
-        try {
-            const response = await api.get('/user/profile');
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching profile:', error);
-            throw error;
-        }
-    },
-
-    logout: () => {
-        // We can add a logout endpoint if needed
+        const res = await api.get('/user/profile');
+        return res.data;
     }
 };
+
 export default authApi;
