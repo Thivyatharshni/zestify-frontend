@@ -33,7 +33,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-24 overflow-x-hidden">
+    <div className="min-h-screen bg-white pb-0 overflow-x-hidden">
       <LocationModal />
 
       <HeroVideoSection
@@ -59,7 +59,7 @@ const Home = () => {
         </section>
 
         <section className="mb-24">
-          <div className="sticky top-20 z-40 bg-white/90 backdrop-blur-md py-4 mb-12 border-b border-gray-100">
+          <div className="sticky top-20 z-40 bg-white/90 backdrop-blur-md py-4 border-b border-gray-100">
             <FilterBar activeFilters={activeFilters} onToggle={toggleFilter} />
           </div>
           <RestaurantGrid activeFilters={activeFilters} />

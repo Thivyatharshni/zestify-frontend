@@ -13,10 +13,10 @@ const FILTERS = [
 const FilterBar = ({ activeFilters, onToggle }) => {
     return (
         <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-0.5">
-            <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 transition-all whitespace-nowrap shadow-sm">
+            <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-base font-bold text-gray-900 hover:bg-gray-50 transition-all whitespace-nowrap shadow-sm">
                 Filter <SlidersHorizontal size={14} />
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 transition-all whitespace-nowrap shadow-sm">
+            <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-base font-bold text-gray-900 hover:bg-gray-50 transition-all whitespace-nowrap shadow-sm">
                 Sort By <ChevronDown size={14} />
             </button>
 
@@ -26,9 +26,9 @@ const FilterBar = ({ activeFilters, onToggle }) => {
                 <button
                     key={filter}
                     onClick={() => onToggle(filter)}
-                    className={`px-4 py-2 rounded-full border text-base font-medium transition-all whitespace-nowrap ${activeFilters.includes(filter)
+                    className={`px-4 py-2 rounded-full border text-base font-bold transition-all whitespace-nowrap ${activeFilters.includes(filter)
                         ? 'bg-orange-500 text-white border-orange-500 shadow-md scale-105'
-                        : 'bg-white text-gray-700 border-gray-200 hover:border-orange-200 hover:text-orange-600'
+                        : 'bg-white text-gray-900 border-gray-200 hover:border-orange-200 hover:text-orange-600'
                         }`}
                 >
                     {filter}
