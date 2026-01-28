@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://zestify-backend-h49l.onrender.com',
+    baseURL: 'https://zestify-backend-h49l.onrender.com/api',
     headers: {
         'Content-Type': 'application/json',
     },
