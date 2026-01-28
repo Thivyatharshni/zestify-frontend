@@ -1,18 +1,18 @@
 import api from './api';
 
 export const authApi = {
-    sendOtp: async (phoneNumber) => {
+    sendOtp: async (phone) => {
         try {
-            const response = await api.post('/auth/send-otp', { phoneNumber });
+            const response = await api.post('/auth/send-otp', { phone });
             return response.data;
         } catch (error) {
             throw error.response?.data?.message || 'Failed to send OTP';
         }
     },
 
-    verifyOtp: async (phoneNumber, otp) => {
+    verifyOtp: async (phone, otp) => {
         try {
-            const response = await api.post('/auth/verify-otp', { phoneNumber, otp });
+            const response = await api.post('/auth/verify-otp', { phone, otp });
             return response.data; // { user, token }
         } catch (error) {
             throw error.response?.data?.message || 'Invalid OTP';
