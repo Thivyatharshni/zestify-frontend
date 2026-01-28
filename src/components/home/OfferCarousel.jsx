@@ -25,9 +25,9 @@ const OfferCarousel = () => {
                 console.error("Failed to fetch offers:", error);
                 setLanes(COUPONS.map(c => ({
                     id: c.code,
-                    image: c.image,
-                    title: c.title,
-                    description: c.description
+                    image: c.image || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=95",
+                    title: c.title || "Exclusive Offer",
+                    description: c.description || `Get ${c.discount}% off!`
                 })));
             } finally {
                 setLoading(false);
@@ -80,11 +80,13 @@ const OfferCarousel = () => {
                     {lanes.map((lane) => (
                         <div
                             key={lane.id}
-                            className="flex-shrink-0 w-full md:w-[600px] h-[280px] md:h-[350px] snap-start relative rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all group cursor-pointer"
+                            className="flex-shrink-0 w-full md:w-[480px] h-[260px] md:h-[280px] snap-start relative rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all group cursor-pointer"
                         >
                             <img
                                 src={lane.image}
                                 alt={lane.title}
+                                loading="lazy"
+                                onError={(e) => e.target.src = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=95"}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
