@@ -39,21 +39,13 @@ const RestaurantGrid = ({ activeFilters }) => {
                             break;
                     }
                 });
-                const data = await restaurantApi.getRestaurants(activeFilters);
+                const data = await restaurantApi.getRestaurants(params);
                 const backendItems = Array.isArray(data) ? data : (data?.restaurants || []);
 
-                // Merge backend with mocks to ensure data visibility
-                const merged = [...backendItems];
-                RESTAURANTS.forEach(mockRest => {
-                    if (!merged.find(r => r.name.toLowerCase() === mockRest.name.toLowerCase())) {
-                        merged.push(mockRest);
-                    }
-                });
-
-                setRestaurants(merged);
+                setRestaurants(backendItems);
             } catch (error) {
                 console.error("Failed to fetch restaurants:", error);
-                setRestaurants(RESTAURANTS);
+                setRestaurants([]);
             } finally {
                 setLoading(false);
             }
