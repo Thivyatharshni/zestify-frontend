@@ -22,37 +22,37 @@ const CartItem = ({ item }) => {
     const unitPriceWithAddons = basePrice + addonsPrice;
 
     return (
-        <div className="group py-4 px-2 mb-1 transition-all duration-300 border-b border-gray-50 last:border-0 hover:bg-slate-50 rounded-xl">
-            <div className="flex items-center justify-between gap-4">
-                <div className="flex items-start gap-4 flex-1 min-w-0">
-                    <div className={`mt-1.5 w-3 h-3 border flex items-center justify-center rounded-sm flex-shrink-0 ${item.isVeg ? 'border-green-600' : 'border-red-600'}`}>
+        <div className="group py-4 px-2 border-b border-gray-100 last:border-0 transition-all duration-200 hover:bg-gray-50/50 rounded-lg">
+            <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div className={`mt-1 w-3 h-3 border flex items-center justify-center rounded-sm flex-shrink-0 ${item.isVeg ? 'border-green-600' : 'border-red-600'}`}>
                         <div className={`w-1.5 h-1.5 rounded-full ${item.isVeg ? 'bg-green-600' : 'bg-red-600'}`} />
                     </div>
-                    <div className="min-w-0">
-                        <h4 className="text-base md:text-lg font-bold text-slate-900 truncate tracking-tight">{item.name}</h4>
-                        <p className="text-xs md:text-sm text-slate-600 font-semibold mt-1">
+                    <div className="min-w-0 flex-1">
+                        <h4 className="text-sm md:text-base font-bold text-gray-900 truncate">{item.name}</h4>
+                        <p className="text-xs text-gray-600 font-semibold mt-1">
                             {formatPrice(unitPriceWithAddons)} per unit
                         </p>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4 md:gap-8 flex-shrink-0">
-                    <div className="flex items-center h-8 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all hover:border-green-200">
+                <div className="flex items-center gap-3 md:gap-6 flex-shrink-0">
+                    <div className="flex items-center h-8 border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm hover:border-green-500 transition-colors">
                         <button
-                            className="w-8 h-full flex items-center justify-center text-slate-400 hover:text-green-600 transition-colors font-semibold text-base"
+                            className="w-8 h-full flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors font-bold text-base"
                             onClick={() => handleUpdateQuantity(item.quantity - 1)}
                         >
                             -
                         </button>
-                        <span className="w-8 h-full flex items-center justify-center text-slate-900 font-bold text-sm bg-slate-50/50">{item.quantity}</span>
+                        <span className="w-8 h-full flex items-center justify-center text-gray-900 font-bold text-sm bg-gray-50">{item.quantity}</span>
                         <button
-                            className="w-8 h-full flex items-center justify-center text-slate-900 hover:text-green-600 transition-colors font-semibold text-lg"
+                            className="w-8 h-full flex items-center justify-center text-gray-900 hover:text-green-600 hover:bg-green-50 transition-colors font-bold text-lg"
                             onClick={() => handleUpdateQuantity(item.quantity + 1)}
                         >
                             +
                         </button>
                     </div>
-                    <div className="text-base font-bold text-slate-900 min-w-[80px] text-right">
+                    <div className="text-sm md:text-base font-bold text-gray-900 min-w-[70px] text-right">
                         {formatPrice(unitPriceWithAddons * item.quantity)}
                     </div>
                 </div>

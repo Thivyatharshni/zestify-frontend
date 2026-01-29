@@ -45,63 +45,63 @@ const PriceSummary = () => {
     const grandTotal = itemTotal + deliveryFee + platformFee + gst - (state.discount || 0);
 
     return (
-        <div className="space-y-6">
-            <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest">Bill Details</h3>
+        <div className="space-y-5">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest">Bill Details</h3>
 
-            <div className="space-y-4">
-                <div className="flex justify-between items-center group/item transition-all gap-4">
-                    <span className="text-slate-700 font-semibold text-base">Item Total</span>
-                    <span className="font-bold text-slate-900 text-base">{formatPrice(itemTotal - addonsTotal)}</span>
+            <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                    <span className="text-gray-700 font-semibold text-sm">Item Total</span>
+                    <span className="font-bold text-gray-900 text-sm">{formatPrice(itemTotal - addonsTotal)}</span>
                 </div>
 
                 {allAddons.length > 0 && (
-                    <div className="pl-4 border-l-2 border-slate-100 space-y-2 py-1">
+                    <div className="pl-4 border-l-2 border-gray-200 space-y-2 py-1">
                         {allAddons.map((addon, idx) => (
-                            <div key={idx} className="flex justify-between items-center gap-4">
-                                <span className="text-slate-600 text-sm font-semibold">{addon.name} (x{addon.quantity})</span>
-                                <span className="text-slate-800 text-sm font-bold">{formatPrice(addon.totalPrice)}</span>
+                            <div key={idx} className="flex justify-between items-center">
+                                <span className="text-gray-600 text-xs font-semibold">{addon.name} (×{addon.quantity})</span>
+                                <span className="text-gray-800 text-xs font-bold">{formatPrice(addon.totalPrice)}</span>
                             </div>
                         ))}
                     </div>
                 )}
 
-                <div className="h-px bg-slate-200" />
+                <div className="h-px bg-gray-200" />
 
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center group/item transition-all gap-4">
-                        <span className="text-slate-700 font-semibold text-sm">Delivery Fee</span>
-                        <span className={`font-bold text-sm ${deliveryFee === 0 ? 'text-green-600' : 'text-slate-900'}`}>
+                <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-700 font-semibold text-sm">Delivery Fee</span>
+                        <span className={`font-bold text-sm ${deliveryFee === 0 ? 'text-green-600' : 'text-gray-900'}`}>
                             {deliveryFee === 0 ? 'FREE' : formatPrice(deliveryFee)}
                         </span>
                     </div>
 
-                    <div className="flex justify-between items-center group/item transition-all gap-4">
-                        <span className="text-slate-700 font-semibold text-sm">Platform Fee</span>
-                        <span className="font-bold text-slate-900 text-sm">{formatPrice(platformFee)}</span>
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-700 font-semibold text-sm">Platform Fee</span>
+                        <span className="font-bold text-gray-900 text-sm">{formatPrice(platformFee)}</span>
                     </div>
 
-                    <div className="flex justify-between items-center group/item transition-all gap-4">
-                        <span className="text-slate-700 font-semibold text-sm">GST and Charges</span>
-                        <span className="font-bold text-slate-900 text-sm">{formatPrice(gst)}</span>
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-700 font-semibold text-sm">GST and Charges</span>
+                        <span className="font-bold text-gray-900 text-sm">{formatPrice(gst)}</span>
                     </div>
                 </div>
 
                 {state.discount > 0 && (
-                    <div className="flex justify-between items-center py-4 px-5 bg-green-50 text-green-700 rounded-xl border border-green-100 mt-4">
-                        <span className="font-bold uppercase text-xs tracking-widest">Coupon Savings</span>
-                        <span className="font-bold text-lg">-{formatPrice(state.discount)}</span>
+                    <div className="flex justify-between items-center py-3 px-4 bg-green-50 text-green-700 rounded-lg border border-green-200">
+                        <span className="font-bold text-xs uppercase tracking-wide">Coupon Savings</span>
+                        <span className="font-bold text-base">-{formatPrice(state.discount)}</span>
                     </div>
                 )}
             </div>
 
-            {/* Grand Total Hero Area */}
-            <div className="mt-10 pt-8 border-t-2 border-slate-100">
-                <div className="flex justify-between items-end">
-                    <div className="flex flex-col">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">To Pay</span>
-                        <span className="text-4xl font-bold text-slate-900 tracking-tight">Total Bill</span>
+            {/* Grand Total - Prominent */}
+            <div className="pt-5 border-t-2 border-gray-300">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">To Pay</p>
+                        <p className="text-2xl md:text-3xl font-bold text-gray-900">Total Bill</p>
                     </div>
-                    <div className="text-5xl font-bold text-slate-900 tracking-tight">
+                    <div className="text-3xl md:text-4xl font-bold text-gray-900">
                         {formatPrice(grandTotal)}
                     </div>
                 </div>

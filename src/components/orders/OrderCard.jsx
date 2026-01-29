@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, RefreshCw } from 'lucide-react';
+import { ChevronRight, RefreshCw, X } from 'lucide-react';
 import { formatPrice } from '../../utils/formatPrice';
 import OrderStatusBadge from './OrderStatusBadge';
 import Button from '../common/Button';
+import { orderApi } from '../../services/orderApi';
 
 const OrderCard = ({ order }) => {
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [cancelling, setCancelling] = useState(false);
+
     // Backend properties: order.restaurant, order.items, order.totalPrice, order.status, order.createdAt, order.id / order._id
     const restaurant = order.restaurant || {};
     const orderId = order.id || order._id; // ✅ Optional defensive fallback
+
+    const handleCancelOrder = async () => {
+        setCancelling(true);
+        try {
+            await orderApi.cancelOrder(orderId);
+            alert('Order cancelled successfully!');
+            setShowCancelModal(false);
+            // Optionally, refresh the page to update the order status
+            window.location.reload();
+        } catch (error) {
+            alert('Failed to cancel order. Please try again.');
+        } finally {
+            setCancelling(false);
+        }
+    };
 
     return (
         <div className="bg-white border border-gray-100 rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group">
@@ -70,6 +89,15 @@ const OrderCard = ({ order }) => {
                     </span>
                 </div>
                 <div className="flex gap-3">
+                    {order.status === 'PLACED' && (
+                        <Button
+                            variant="outline"
+                            className="text-red-600 border-red-200 hover:bg-red-50 font-black uppercase text-[10px] tracking-widest px-4 shadow-sm"
+                            onClick={() => setShowCancelModal(true)}
+                        >
+                            Cancel Order
+                        </Button>
+                    )}
                     {['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes(order.status) ? (
                         <Link to={`/orders/${orderId}`}>
                             <Button
@@ -89,6 +117,40 @@ const OrderCard = ({ order }) => {
                     )}
                 </div>
             </div>
+
+            {/* Cancel Order Modal */}
+            {showCancelModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-black text-lg text-gray-900">Cancel Order</h3>
+                            <button onClick={() => setShowCancelModal(false)} className="text-gray-400 hover:text-gray-600">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <p className="text-gray-600 mb-6 text-sm">
+                            Are you sure you want to cancel this order? This action cannot be undone.
+                        </p>
+                        <div className="flex gap-3">
+                            <Button
+                                variant="outline"
+                                className="flex-1 text-gray-600 border-gray-200"
+                                onClick={() => setShowCancelModal(false)}
+                            >
+                                Keep Order
+                            </Button>
+                            <Button
+                                variant="primary"
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                                onClick={handleCancelOrder}
+                                disabled={cancelling}
+                            >
+                                {cancelling ? 'Cancelling...' : 'Cancel Order'}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

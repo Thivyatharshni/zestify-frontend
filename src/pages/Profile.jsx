@@ -12,7 +12,7 @@ const Profile = () => {
     const renderContent = () => {
         switch (activeTab) {
             case 'orders':
-                return <Orders embedded={true} />; // We reuse the Orders page component but maybe strictly it should be a component
+                return <Orders embedded={true} />;
             case 'addresses':
                 return <AddressList />;
             case 'profile':
@@ -24,14 +24,14 @@ const Profile = () => {
 
     if (!user) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center mt-12 md:mt-16">
                 <div>Please log in to view profile.</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 mt-12 md:mt-16">
             <div className="max-w-6xl mx-auto mb-8">
                 <h1 className="text-2xl font-bold text-gray-900">My Account</h1>
                 <p className="text-gray-500">{user.email}</p>

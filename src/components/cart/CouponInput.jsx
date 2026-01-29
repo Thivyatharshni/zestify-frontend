@@ -73,16 +73,16 @@ const CouponInput = () => {
 
     if (state.couponCode) {
         return (
-            <div className="py-4 border-y border-gray-100 my-4 border-dashed">
+            <div className="py-4 px-4 border border-dashed border-green-200 bg-green-50 rounded-lg">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <TicketPercent size={20} className="text-green-500" />
+                        <TicketPercent size={18} className="text-green-600" />
                         <div>
-                            <span className="font-medium text-gray-900">
+                            <span className="font-bold text-gray-900 text-sm uppercase tracking-wide">
                                 {state.couponCode}
                             </span>
                             {state.discount > 0 && (
-                                <span className="text-green-600 ml-2">
+                                <span className="text-green-700 ml-2 font-semibold text-sm">
                                     -₹{state.discount}
                                 </span>
                             )}
@@ -90,7 +90,7 @@ const CouponInput = () => {
                     </div>
                     <button
                         onClick={removeCoupon}
-                        className="text-gray-400 hover:text-red-500"
+                        className="text-green-600 hover:text-red-600 transition-colors p-1"
                     >
                         <X size={16} />
                     </button>
@@ -100,17 +100,17 @@ const CouponInput = () => {
     }
 
     return (
-        <div className="py-4 border-y border-gray-100 my-4 border-dashed">
+        <div className="py-4 px-4 border border-dashed border-gray-200 rounded-lg bg-gray-50/50">
             {!showInput ? (
                 <button
                     onClick={() => setShowInput(true)}
-                    className="w-full flex items-center justify-between text-gray-700 hover:text-gray-900 font-medium group"
+                    className="w-full flex items-center justify-between text-gray-700 hover:text-gray-900 font-semibold group transition-colors"
                 >
                     <div className="flex items-center gap-3">
-                        <TicketPercent size={20} className="text-gray-500 group-hover:text-gray-900" />
-                        <span>Apply Coupon</span>
+                        <TicketPercent size={18} className="text-orange-500 group-hover:text-orange-600" />
+                        <span className="text-sm">Apply Coupon</span>
                     </div>
-                    <span className="text-gray-400 group-hover:text-gray-600 text-xl">›</span>
+                    <span className="text-gray-400 group-hover:text-gray-600 text-lg">›</span>
                 </button>
             ) : (
                 <div className="space-y-3">
@@ -118,38 +118,38 @@ const CouponInput = () => {
                         <input
                             type="text"
                             value={couponCode}
-                            onChange={(e) => setCouponCode(e.target.value)}
+                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                             placeholder="Enter coupon code"
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium uppercase focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         />
                         <button
                             onClick={handleApplyCoupon}
                             disabled={loading || !couponCode.trim()}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             {loading ? 'Applying...' : 'Apply'}
                         </button>
                     </div>
 
                     {error && (
-                        <p className="text-red-500 text-sm">{error}</p>
+                        <p className="text-red-600 text-xs font-semibold">{error}</p>
                     )}
 
                     {coupons.length > 0 && (
                         <div className="space-y-2">
-                            <p className="text-sm text-gray-600">
+                            <p className="text-xs text-gray-600 font-semibold uppercase tracking-wide">
                                 Available offers:
                             </p>
                             {coupons.map((coupon) => (
                                 <button
                                     key={coupon.code}
                                     onClick={() => handleSelectCoupon(coupon.code)}
-                                    className="w-full text-left p-2 border border-dashed border-gray-300 rounded-lg hover:border-gray-400 text-sm"
+                                    className="w-full text-left p-3 border border-dashed border-gray-300 rounded-lg hover:border-green-400 hover:bg-green-50/50 text-sm transition-all"
                                 >
-                                    <div className="font-medium">
+                                    <div className="font-bold text-gray-900 text-xs uppercase tracking-wide">
                                         {coupon.code}
                                     </div>
-                                    <div className="text-gray-500 text-xs">
+                                    <div className="text-gray-600 text-xs mt-1">
                                         {coupon.description}
                                     </div>
                                 </button>

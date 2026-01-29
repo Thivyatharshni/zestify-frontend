@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { restaurantApi } from '../services/restaurantApi';
-import RestaurantCard from '../components/home/RestaurantCard';
-import { RESTAURANTS } from '../mocks/restaurants.mock';
+import FoodItemCard from '../components/restaurant/FoodItemCard';
+import { MENU_ITEMS } from '../mocks/menu.mock';
 import { Loader2 } from 'lucide-react';
 
 /**
@@ -10,61 +10,82 @@ import { Loader2 } from 'lucide-react';
  * Route: /category/:categorySlug
  *
  * Backend-ready:
- * GET /api/restaurants?cuisine=North Indian
+ * GET /api/menu-items?category={categoryName}
  */
 
 const CategoryPage = () => {
     const { categorySlug } = useParams();
 
-    const [restaurants, setRestaurants] = useState([]);
+    const [menuItems, setMenuItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [restaurant, setRestaurant] = useState(null);
+
+    const isRestaurant = categorySlug.startsWith('restaurant-');
+    const identifier = isRestaurant ? categorySlug.replace('restaurant-', '') : categorySlug;
 
     // Convert slug → readable name
-    const categoryName = categorySlug
+    const displayName = isRestaurant ? (restaurant?.name || 'Restaurant') : identifier
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
     useEffect(() => {
-        const fetchRestaurantsByCategory = async () => {
+        const fetchData = async () => {
             setLoading(true);
             setError(null);
 
             try {
-                const data = await restaurantApi.getRestaurants({
-                    cuisine: categoryName
-                });
+                if (isRestaurant) {
+                    // Fetch restaurant details and menu
+                    const [restaurantData, menuData] = await Promise.all([
+                        restaurantApi.getRestaurantById(identifier),
+                        restaurantApi.getMenuItemsByRestaurant(identifier)
+                    ]);
 
-                // Handle both { restaurants: [...] } and direct array
-                const items = Array.isArray(data) ? data : (data?.restaurants || []);
-
-                if (items.length > 0) {
-                    setRestaurants(items);
+                    setRestaurant(restaurantData);
+                    setMenuItems(Array.isArray(menuData) ? menuData : []);
                 } else {
-                    const filteredMock = RESTAURANTS.filter(rest =>
-                        Array.isArray(rest.cuisines) && rest.cuisines.includes(categoryName)
-                    );
-                    setRestaurants(filteredMock);
+                    // Category flow
+                    const data = await restaurantApi.getMenuItemsByCategory(displayName);
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        setMenuItems(data);
+                    } else {
+                        // Fallback to mock data
+                        const filteredMock = MENU_ITEMS.filter(item =>
+                            item.category?.toLowerCase() === displayName.toLowerCase()
+                        );
+                        setMenuItems(filteredMock);
+                    }
                 }
             } catch (err) {
-                console.error('Failed to fetch category restaurants:', err);
+                console.error(`Failed to fetch ${isRestaurant ? 'restaurant' : 'category'} menu items:`, err);
 
-                const filteredMock = RESTAURANTS.filter(rest =>
-                    rest.cuisines?.includes(categoryName)
-                );
-                setRestaurants(filteredMock);
+                if (isRestaurant) {
+                    // For restaurant, try fallback to mock
+                    const filteredMock = MENU_ITEMS.filter(item =>
+                        item.restaurant === identifier
+                    );
+                    setMenuItems(filteredMock);
+                } else {
+                    // Category fallback
+                    const filteredMock = MENU_ITEMS.filter(item =>
+                        item.category?.toLowerCase() === displayName.toLowerCase()
+                    );
+                    setMenuItems(filteredMock);
+                }
 
-                if (filteredMock.length === 0) {
-                    setError('No restaurants found for this category');
+                if (menuItems.length === 0) {
+                    setError(`No menu items found for this ${isRestaurant ? 'restaurant' : 'category'}`);
                 }
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchRestaurantsByCategory();
-    }, [categoryName]);
+        fetchData();
+    }, [categorySlug, identifier, displayName, isRestaurant]);
 
     if (loading) {
         return (
@@ -75,31 +96,32 @@ const CategoryPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 mt-12 md:mt-16">
+            <div className="max-w-4xl mx-auto">
                 <div className="mb-8">
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-                        {categoryName}
+                        {displayName}
                     </h1>
                     <p className="text-gray-500 mt-1">
-                        Restaurants serving {categoryName} cuisine
+                        Delicious {displayName} items{isRestaurant ? '' : ' from top restaurants'}
                     </p>
                 </div>
 
-                {error && restaurants.length === 0 && (
+                {error && menuItems.length === 0 && (
                     <div className="text-center py-16 text-gray-500 font-medium">
                         {error}
                     </div>
                 )}
 
-                {restaurants.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {restaurants.map((restaurant, index) => {
-                            const restaurantId = restaurant._id?.$oid || restaurant.id || `category-rest-${index}`;
+                {menuItems.length > 0 ? (
+                    <div className="space-y-4">
+                        {menuItems.map((item, index) => {
+                            const itemId = item._id?.$oid || item.id || `category-item-${index}`;
                             return (
-                                <RestaurantCard
-                                    key={restaurantId}
-                                    restaurant={restaurant}
+                                <FoodItemCard
+                                    key={itemId}
+                                    item={item}
+                                    restaurantId={item.restaurantId || item.restaurant?.id}
                                 />
                             );
                         })}
@@ -107,7 +129,7 @@ const CategoryPage = () => {
                 ) : (
                     !error && (
                         <div className="text-center py-16 text-gray-500 font-medium">
-                            No restaurants available in this category
+                            No menu items available{isRestaurant ? ' for this restaurant' : ' in this category'}
                         </div>
                     )
                 )}

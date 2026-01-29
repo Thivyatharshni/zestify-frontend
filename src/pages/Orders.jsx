@@ -23,10 +23,12 @@ const Orders = ({ embedded = false }) => {
             try {
                 const data = await orderApi.getOrders();
                 if (data && data.length > 0) {
-                    setOrders(data);
+                    // Filter out cancelled orders
+                    const filtered = data.filter(order => localStorage.getItem(`cancelled-${order.id || order._id}`) !== 'true');
+                    setOrders(filtered);
                 } else {
-                    // Show a mock order to complete the flow
-                    setOrders([{
+                    // Show a mock order to complete the flow, if not cancelled
+                    const mockOrder = {
                         id: "MOCK-123456",
                         status: "PLACED",
                         createdAt: new Date().toISOString(),
@@ -37,11 +39,16 @@ const Orders = ({ embedded = false }) => {
                             image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
                             location: "Indiranagar, Bangalore"
                         }
-                    }]);
+                    };
+                    if (localStorage.getItem(`cancelled-${mockOrder.id}`) !== 'true') {
+                        setOrders([mockOrder]);
+                    } else {
+                        setOrders([]);
+                    }
                 }
             } catch (error) {
                 console.error("Failed to fetch orders, using mock:", error);
-                setOrders([{
+                const mockOrder = {
                     id: "MOCK-123456",
                     status: "PLACED",
                     createdAt: new Date().toISOString(),
@@ -52,7 +59,12 @@ const Orders = ({ embedded = false }) => {
                         image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
                         location: "Indiranagar, Bangalore"
                     }
-                }]);
+                };
+                if (localStorage.getItem(`cancelled-${mockOrder.id}`) !== 'true') {
+                    setOrders([mockOrder]);
+                } else {
+                    setOrders([]);
+                }
             } finally {
                 setLoading(false);
             }

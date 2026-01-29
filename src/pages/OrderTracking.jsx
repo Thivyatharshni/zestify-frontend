@@ -64,13 +64,13 @@ const OrderTracking = () => {
     }, [id]);
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="min-h-screen flex items-center justify-center bg-white mt-12 md:mt-16">
             <Loader2 className="w-12 h-12 animate-spin text-orange-500" />
         </div>
     );
 
     if (!order) return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4 mt-12 md:mt-16">
             <div className="text-gray-400 mb-4 text-6xl">?</div>
             <h2 className="text-2xl font-black text-gray-900 mb-2">Order Not Found</h2>
             <p className="text-gray-500 mb-6 font-medium">We couldn't find the order you're looking for.</p>
@@ -95,7 +95,7 @@ const OrderTracking = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white mt-12 md:mt-16">
             <div className="bg-gray-900 text-white p-6 pb-20">
                 <div className="max-w-2xl mx-auto">
                     <Link to={ROUTES.ORDERS} className="inline-flex items-center text-gray-400 hover:text-white mb-8 transition-colors">

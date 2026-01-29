@@ -55,6 +55,26 @@ export const restaurantApi = {
         }
     },
 
+    getMenuItemsByCategory: async (categoryName) => {
+        try {
+            const response = await api.get('/menu-items', { params: { category: categoryName } });
+            return response.data; // FLAT list of menu items
+        } catch (error) {
+            console.error(`Error fetching menu items for category ${categoryName}:`, error);
+            return [];
+        }
+    },
+
+    getMenuItemsByRestaurant: async (restaurantId) => {
+        try {
+            const response = await api.get(`/menu/${restaurantId}`);
+            return response.data; // FLAT list
+        } catch (error) {
+            console.error(`Error fetching menu items for restaurant ${restaurantId}:`, error);
+            return [];
+        }
+    },
+
 
 
     searchRestaurants: async (query) => {

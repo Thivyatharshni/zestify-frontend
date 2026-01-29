@@ -7,7 +7,7 @@ const RestaurantCard = ({ restaurant }) => {
     const restaurantId = restaurant._id?.$oid || restaurant.id;
 
     return (
-        <Link to={`/restaurant/${restaurantId}`} className="block group">
+        <Link to={`/category/restaurant-${restaurantId}`} className="block group">
             <div className="relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 h-64">
                 {/* Full Image Background */}
                 <img

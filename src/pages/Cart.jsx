@@ -53,7 +53,7 @@ const Cart = () => {
 
     if (cartState.items.length === 0) {
         return (
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen bg-gray-50 mt-12 md:mt-16">
                 <EmptyState
                     title="Your cart is empty"
                     description="You can go to home page to view more restaurants"
@@ -70,189 +70,193 @@ const Cart = () => {
     }
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 mt-12 md:mt-16">
             <Loader2 className="w-12 h-12 animate-spin text-orange-500" />
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] py-8 md:py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-start">
+        <div className="min-h-screen bg-gray-50 py-6 md:py-10 px-4 sm:px-6 lg:px-8 mt-12 md:mt-16">
+            <div className="max-w-6xl mx-auto">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
 
-                {/* Left Section: Checkout Steps */}
-                <div className="w-full lg:flex-1 space-y-6 relative">
+                    {/* Left Section: User Info & Checkout Steps */}
+                    <div className="w-full lg:flex-1 space-y-5">
 
-                    {/* Progress Indicator - Subtle Line */}
-                    <div className="absolute left-7 top-10 bottom-10 w-0.5 bg-gray-100 -z-0 hidden md:block" />
-
-                    {/* Account Section - Profile Preview Style */}
-                    <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 relative z-10 transition-shadow hover:shadow-md group">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-4 items-center">
-                                <div className="w-12 h-12 bg-slate-900 rounded-xl text-white flex items-center justify-center flex-shrink-0">
-                                    <UserIcon size={20} />
+                        {/* Account Section */}
+                        <div className="bg-white p-5 md:p-7 rounded-xl shadow-sm border border-gray-200 transition-all hover:shadow-md">
+                            <div className="flex justify-between items-center">
+                                <div className="flex gap-4 items-center">
+                                    <div className="w-11 h-11 bg-gray-900 rounded-lg text-white flex items-center justify-center flex-shrink-0">
+                                        <UserIcon size={18} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Account</h3>
+                                        {!user ? (
+                                            <p className="text-gray-700 font-semibold text-base">Log in to place your order</p>
+                                        ) : (
+                                            <div className="flex flex-col">
+                                                <span className="font-bold text-gray-900 text-lg">{user.name}</span>
+                                                <span className="text-gray-600 text-sm font-medium">{user.phone}</span>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest mb-1">Account</h3>
-                                    {!user ? (
-                                        <p className="text-slate-700 font-medium text-lg">Log in to place your order</p>
-                                    ) : (
-                                        <div className="flex flex-col">
-                                            <span className="font-semibold text-slate-900 text-xl">{user.name}</span>
-                                            <span className="text-slate-600 text-base font-medium">{user.phone}</span>
+                                {!user && (
+                                    <Link to={ROUTES.LOGIN}>
+                                        <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-50 px-5 py-2 rounded-lg text-sm font-bold transition-all">
+                                            Log In
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Delivery Address - Highlighted */}
+                        <div className="bg-gradient-to-br from-orange-50 to-orange-50/50 p-5 md:p-7 rounded-xl shadow-sm border border-orange-200 transition-all hover:shadow-md">
+                            <div className="flex gap-4 items-start">
+                                <div className="w-11 h-11 bg-white rounded-lg text-orange-600 border border-orange-200 shadow-sm flex items-center justify-center flex-shrink-0">
+                                    <MapPin size={18} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-xs font-bold text-orange-700 uppercase tracking-wider">Delivery Address</h3>
+                                        <Button
+                                            variant="ghost"
+                                            className="text-orange-600 hover:bg-orange-100/60 px-3 py-1.5 -mr-2 rounded-md flex items-center gap-1.5 text-sm font-bold transition-all"
+                                            onClick={() => setIsAddressModalOpen(true)}
+                                        >
+                                            <span className="hidden sm:inline">{addresses.length > 0 ? "Change" : "Add New"}</span>
+                                            <span className="sm:hidden">{addresses.length > 0 ? "Edit" : "Add"}</span>
+                                        </Button>
+                                    </div>
+
+                                    {selectedAddress ? (
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
+                                                <p className="font-bold text-gray-900 text-xs uppercase tracking-widest">{selectedAddress.label || selectedAddress.type || 'Home'}</p>
+                                            </div>
+                                            <p className="text-gray-800 text-base md:text-lg leading-relaxed font-semibold">
+                                                {selectedAddress.address ||
+                                                    `${selectedAddress.street || ''}, ${selectedAddress.area || ''}, ${selectedAddress.city || ''} - ${selectedAddress.pincode || ''}`
+                                                }
+                                            </p>
                                         </div>
+                                    ) : (
+                                        <p className="text-gray-600 text-base font-medium">Select address to proceed with checkout</p>
                                     )}
                                 </div>
                             </div>
-                            {!user && (
-                                <Link to={ROUTES.LOGIN}>
-                                    <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-50 px-6 py-2 rounded-xl text-sm font-semibold transition-all">
-                                        Log In
-                                    </Button>
-                                </Link>
-                            )}
                         </div>
-                    </div>
 
-                    {/* Delivery Address - Highlight Card */}
-                    <div className="bg-orange-50/30 p-6 md:p-8 rounded-2xl shadow-sm border border-orange-100 relative z-10 transition-shadow hover:shadow-md group">
-                        <div className="flex gap-4 items-start mb-6">
-                            <div className="w-12 h-12 bg-white rounded-xl text-orange-500 border border-orange-100 shadow-sm flex items-center justify-center flex-shrink-0">
-                                <MapPin size={20} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-start">
-                                    <h3 className="text-base font-bold text-orange-600 uppercase tracking-widest mt-1">Delivery Address</h3>
-                                    <Button
-                                        variant="ghost"
-                                        className="text-orange-600 hover:bg-orange-100/50 p-2 -mr-2 rounded-lg flex items-center gap-2 text-base font-bold transition-all"
-                                        onClick={() => setIsAddressModalOpen(true)}
-                                    >
-                                        <span className="hidden sm:inline">{addresses.length > 0 ? "Change" : "Add New"}</span>
-                                        <span className="sm:hidden">{addresses.length > 0 ? "Edit" : "Add"}</span>
-                                    </Button>
-                                </div>
+                        <AddressModal
+                            isOpen={isAddressModalOpen}
+                            onClose={() => setIsAddressModalOpen(false)}
+                            addresses={addresses}
+                            onSelect={setSelectedAddress}
+                            onAddressAdded={(newAddr) => {
+                                setAddresses(prev => [newAddr, ...prev]);
+                                setSelectedAddress(newAddr);
+                            }}
+                        />
 
-                                {selectedAddress ? (
-                                    <div className="mt-5">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className="w-2.5 h-2.5 bg-orange-500 rounded-full" />
-                                            <p className="font-bold text-slate-900 text-sm uppercase tracking-wider">{selectedAddress.label || selectedAddress.type || 'Home'}</p>
-                                        </div>
-                                        <p className="text-slate-800 text-lg md:text-xl leading-relaxed font-semibold">
-                                            {selectedAddress.address ||
-                                                `${selectedAddress.street || ''}, ${selectedAddress.area || ''}, ${selectedAddress.city || ''} - ${selectedAddress.pincode || ''}`
-                                            }
-                                        </p>
+                        {/* Payment Section */}
+                        <div className={`bg-white p-5 md:p-7 rounded-xl shadow-sm border border-gray-200 transition-all ${!selectedAddress ? 'opacity-50 pointer-events-none' : 'hover:shadow-md'}`}>
+                            <div className="flex justify-between items-center">
+                                <div className="flex gap-4 items-center">
+                                    <div className="w-11 h-11 bg-gray-100 rounded-lg text-gray-400 flex items-center justify-center flex-shrink-0">
+                                        <CreditCard size={18} />
                                     </div>
-                                ) : (
-                                    <p className="text-slate-600 text-lg font-medium mt-3">Select address to proceed with checkout</p>
+                                    <div className="flex flex-col">
+                                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Payment</h3>
+                                        <p className="text-gray-700 text-sm font-semibold">Select method on next step</p>
+                                    </div>
+                                </div>
+                                {selectedAddress && (
+                                    <div className="text-gray-300">
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    <AddressModal
-                        isOpen={isAddressModalOpen}
-                        onClose={() => setIsAddressModalOpen(false)}
-                        addresses={addresses} // Using state addresses which are merged
-                        onSelect={setSelectedAddress}
-                        onAddressAdded={(newAddr) => {
-                            setAddresses(prev => [newAddr, ...prev]);
-                            setSelectedAddress(newAddr);
-                        }}
-                    />
-
-                    {/* Payment - Minimal Accordion Style */}
-                    <div className={`bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 relative z-10 transition-all ${!selectedAddress ? 'opacity-50 grayscale' : 'hover:shadow-md cursor-pointer'}`}>
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-4 items-center">
-                                <div className="w-12 h-12 bg-gray-50 rounded-xl text-slate-400 flex items-center justify-center flex-shrink-0">
-                                    <CreditCard size={20} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest">Payment</h3>
-                                    <p className="text-slate-700 text-base font-semibold">Select method on next step</p>
-                                </div>
-                            </div>
-                            {selectedAddress && (
-                                <div className="text-slate-300">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-
-                {/* Right Section: Cart Summary */}
-                <div className="w-full lg:w-[420px] xl:w-[480px] lg:sticky lg:top-8">
-                    <div className="bg-white p-6 md:p-10 shadow-sm rounded-2xl border border-gray-100 relative transition-all">
-                        {/* Restaurant Header - Reduced Height */}
-                        {restaurant && (
-                            <div className="flex items-center gap-4 mb-8 pb-8 border-b border-gray-50">
-                                <div className="w-16 h-16 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
-                                    <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="font-bold text-slate-900 text-2xl tracking-tight leading-tight truncate">{restaurant.name}</h3>
-                                    <div className="flex items-center gap-2 mt-2">
-                                        <MapPin size={14} className="text-slate-500" />
-                                        <span className="text-sm text-slate-600 font-semibold truncate">
-                                            {typeof restaurant.location === 'string'
-                                                ? restaurant.location
-                                                : (restaurant.area || restaurant.city || "Bangalore")}
-                                        </span>
+                    {/* Right Section: Cart Summary */}
+                    <div className="w-full lg:w-[440px] xl:w-[480px] lg:sticky lg:top-6">
+                        <div className="bg-white p-6 md:p-8 shadow-md rounded-xl border border-gray-200">
+                            
+                            {/* Restaurant Header */}
+                            {restaurant && (
+                                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+                                    <div className="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
+                                        <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="font-bold text-gray-900 text-xl tracking-tight leading-tight truncate">{restaurant.name}</h3>
+                                        <div className="flex items-center gap-2 mt-1.5">
+                                            <MapPin size={13} className="text-gray-500 flex-shrink-0" />
+                                            <span className="text-xs text-gray-600 font-semibold truncate">
+                                                {typeof restaurant.location === 'string'
+                                                    ? restaurant.location
+                                                    : (restaurant.area || restaurant.city || "Bangalore")}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
+                            )}
+
+                            {/* Cart Items List */}
+                            <div className="mb-6 max-h-[35vh] md:max-h-[45vh] overflow-y-auto pr-2 custom-scrollbar">
+                                <CartList items={cartState.items} />
                             </div>
-                        )}
 
-                        <div className="mb-8 max-h-[40vh] md:max-h-[50vh] overflow-y-auto pr-3 custom-scrollbar">
-                            <CartList items={cartState.items} />
-                        </div>
+                            {/* Coupon & Bill Summary */}
+                            <div className="space-y-6">
+                                <CouponInput />
+                                <PriceSummary />
+                            </div>
 
-                        <div className="space-y-6">
-                            <CouponInput />
-                            <PriceSummary />
-                        </div>
-
-                        {user ? (
-                            <Link to={ROUTES.CHECKOUT} state={{ addressId: selectedAddress?._id?.$oid || selectedAddress?._id || selectedAddress?.id }} className="block mt-8">
-                                <div className="space-y-4">
-                                    <Button
-                                        variant="primary"
-                                        fullWidth
-                                        disabled={!selectedAddress}
-                                        className="bg-green-600 hover:bg-green-700 py-5 text-xl font-bold uppercase tracking-widest rounded-full shadow-lg shadow-green-100 transition-all active:scale-[0.98] disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none"
+                            {/* Proceed to Pay Button */}
+                            {user ? (
+                                <Link to={ROUTES.CHECKOUT} state={{ addressId: selectedAddress?._id?.$oid || selectedAddress?._id || selectedAddress?.id }} className="block mt-8">
+                                    <div className="space-y-3">
+                                        <Button
+                                            variant="primary"
+                                            disabled={!selectedAddress}
+                                            className="w-full bg-green-600 hover:bg-green-700 py-4 text-lg font-bold uppercase tracking-wide rounded-xl shadow-lg shadow-green-200/50 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed"
+                                        >
+                                            Proceed to Pay
+                                        </Button>
+                                        {!selectedAddress && (
+                                            <p className="text-xs text-center text-red-600 font-bold uppercase tracking-wider animate-pulse">
+                                                Select Delivery Address to Continue
+                                            </p>
+                                        )}
+                                    </div>
+                                </Link>
+                            ) : (
+                                <Link to={ROUTES.LOGIN} className="block mt-8">
+                                    <Button 
+                                        variant="primary" 
+                                        className="w-full bg-gray-900 hover:bg-black py-4 text-base font-bold uppercase tracking-wide rounded-xl shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99]"
                                     >
-                                        Proceed to Pay
+                                        Login to Pay
                                     </Button>
-                                    {!selectedAddress && (
-                                        <p className="text-xs text-center text-red-500 font-bold uppercase tracking-[0.2em] animate-pulse">
-                                            Select Delivery Address to Continue
-                                        </p>
-                                    )}
-                                </div>
-                            </Link>
-                        ) : (
-                            <Link to={ROUTES.LOGIN} className="block mt-8">
-                                <Button variant="primary" fullWidth className="bg-slate-900 hover:bg-black py-4 text-base font-bold uppercase tracking-widest rounded-full transition-all active:scale-95">
-                                    Login to Pay
-                                </Button>
-                            </Link>
-                        )}
+                                </Link>
+                            )}
+                        </div>
+
+                        {/* Security Badge */}
+                        <div className="mt-6 flex items-center justify-center gap-3 text-gray-500">
+                            <CreditCard size={14} />
+                            <span className="text-xs font-bold uppercase tracking-widest">100% Secure Checkout</span>
+                        </div>
                     </div>
 
-                    {/* Safety Badge */}
-                    <div className="mt-8 flex items-center justify-center gap-4 text-slate-500 uppercase tracking-widest font-bold text-xs">
-                        <CreditCard size={16} />
-                        <span>100% Secure Checkout</span>
-                    </div>
                 </div>
-
             </div>
         </div>
     );
