@@ -11,6 +11,23 @@ const CategorySlider = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [cardSpacing, setCardSpacing] = useState(310); // Default desktop spacing
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 640) {
+                setCardSpacing(160); // Mobile spacing
+            } else if (window.innerWidth < 1024) {
+                setCardSpacing(240); // Tablet spacing
+            } else {
+                setCardSpacing(310); // Desktop spacing
+            }
+        };
+
+        handleResize(); // Initial check
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -119,7 +136,7 @@ const CategorySlider = () => {
                                         const isVisible = Math.abs(relativeIndex) <= 2;
                                         const isActive = Math.abs(relativeIndex) === 0;
 
-                                        const xOffset = relativeIndex * 310;
+                                        const xOffset = relativeIndex * cardSpacing;
                                         const zOffset = Math.abs(relativeIndex) * -250;
                                         const rotation = relativeIndex * 40;
                                         const opacity = isVisible ? 1 - Math.abs(relativeIndex) * 0.4 : 0;

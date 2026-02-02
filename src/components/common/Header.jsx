@@ -87,7 +87,7 @@ const Header = () => {
                                     <User size={22} />
                                     <span>{user.name}</span>
                                 </Link>
-                                <Button variant="ghost" size="sm" onClick={logout} className={`${isHome && !scrolled ? 'text-white hover:bg-white/10' : ''}`}>
+                                <Button variant="ghost" onClick={logout} className={`text-lg font-semibold ${isHome && !scrolled ? 'text-white hover:bg-white/10' : ''}`}>
                                     Logout
                                 </Button>
                             </div>

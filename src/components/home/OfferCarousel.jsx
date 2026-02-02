@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
+
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { couponApi } from '../../services/couponApi';
 import { COUPONS } from '../../mocks/coupons.mock';
@@ -11,6 +13,9 @@ const OfferCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
 
   const videos = [offerVideo1, offerVideo2, offerVideo3];
 
@@ -51,15 +56,98 @@ const OfferCarousel = () => {
     fetchOffers();
   }, []);
 
-  // Auto rotation (desktop)
+  // Visibility Check (Intersection Observer)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.3 } // Trigger when 30% visible
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
+  // Auto rotation (desktop) - Slower (6s)
   useEffect(() => {
     if (lanes.length < 2) return;
     const interval = setInterval(
       () => setActiveIndex(prev => (prev + 1) % lanes.length),
-      4000
+      6000 // Reduced speed (Slower: 4s + 2s = 6s)
     );
     return () => clearInterval(interval);
   }, [lanes.length]);
+
+  const triggerJackpotAnimation = () => {
+    const center = { x: 0.5, y: 0.5 };
+
+    // Burst 1: Central Paper Explosion
+    confetti({
+      particleCount: 160,
+      spread: 110,
+      origin: center,
+      colors: ['#FFD700', '#FF4500', '#FF0055', '#00E5FF', '#76FF03'],
+      shapes: ['square', 'circle'],
+      scalar: 1,
+      startVelocity: 50,
+      disableForReducedMotion: true,
+      zIndex: 200,
+    });
+
+    // Burst 2: Side Cannons
+    setTimeout(() => {
+      confetti({
+        particleCount: 60,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.8 },
+        colors: ['#FFD700', '#FF0055'],
+        shapes: ['square'],
+        zIndex: 200,
+      });
+      confetti({
+        particleCount: 60,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.8 },
+        colors: ['#00E5FF', '#76FF03'],
+        shapes: ['square'],
+        zIndex: 200,
+      });
+    }, 200);
+
+    // Burst 3: Rain
+    setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        spread: 160,
+        origin: { x: 0.5, y: 0.4 },
+        colors: ['#FFFFFF', '#FFD700'],
+        shapes: ['circle'],
+        scalar: 0.6,
+        gravity: 0.8,
+        ticks: 400,
+        startVelocity: 20,
+        zIndex: 200,
+      });
+    }, 400);
+  };
+
+  // Auto-Trigger Animation on Slide Change
+  useEffect(() => {
+    if (loading || lanes.length === 0 || !isVisible) return; // Only if visible
+
+    // Trigger Jackpot Animation
+    triggerJackpotAnimation();
+  }, [activeIndex, loading, lanes.length, isVisible]);
 
   if (loading) {
     return (
@@ -72,7 +160,7 @@ const OfferCarousel = () => {
   if (!lanes.length) return null;
 
   return (
-    <section className="py-14 bg-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-14 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* 🔥 HEADING */}
@@ -109,7 +197,7 @@ const OfferCarousel = () => {
               const videoSrc = videos[index % videos.length];
 
               const styles = [
-                'z-30 scale-100 opacity-100',
+                'z-30 scale-110 opacity-100',
                 'z-20 scale-90 -translate-x-[360px] opacity-60',
                 'z-10 scale-90 translate-x-[360px] opacity-60'
               ];
@@ -121,35 +209,14 @@ const OfferCarousel = () => {
                 >
                   {/* WRAPPER CONTAINER - Allows badges to overflow */}
                   <div className="relative w-[520px] h-[380px]">
-                    
+
                     {/* 🔥 PLAYFUL FLOATING BADGES - Like stickers casually placed */}
-                    {pos === 0 && (
-                      <>
-                        {/* HOT DEAL Badge - Floating above top-left, tilted like a sticker */}
-                        <div className="absolute -top-6 -left-3 z-50 -rotate-6 animate-float-slow">
-                          <div className="bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 px-4 py-1.5 rounded-full shadow-2xl border-2 border-white/40 hover:scale-110 transition-transform">
-                            <span className="text-white font-black text-sm tracking-wide">🔥 HOT DEAL</span>
-                          </div>
-                        </div>
 
-                        {/* Today's Special Badge - Floating top-right, offset and playful */}
-                        <div className="absolute -top-3 -right-8 z-50 rotate-3 animate-float-medium">
-                          <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 px-4 py-1.5 rounded-full shadow-2xl border-2 border-white/40 hover:scale-110 transition-transform">
-                            <span className="text-white font-black text-sm tracking-wide">⭐ TODAY SPECIAL</span>
-                          </div>
-                        </div>
 
-                        {/* Limited Time Badge - Floating bottom-right, casually tilted */}
-                        <div className="absolute -bottom-4 -right-6 z-50 -rotate-3 animate-float-fast">
-                          <div className="bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 px-4 py-1.5 rounded-full shadow-2xl border-2 border-white/40 hover:scale-110 transition-transform">
-                            <span className="text-white font-black text-sm tracking-wide">⏰ LIMITED TIME</span>
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {/* CARD - Clipped content with hover effects */}
-                    <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl ring-4 ring-orange-400/20 animate-pop group hover:scale-105 transition-transform duration-300">
+                    {/* CARD - Clipped content (No click effect) */}
+                    <div
+                      className="relative w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl ring-4 ring-orange-400/20 group animate-pop"
+                    >
 
                       {/* 🎥 VIDEO */}
                       <video
