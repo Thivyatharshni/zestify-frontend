@@ -9,7 +9,7 @@ const PasswordInput = ({ value, onChange, placeholder = "Password" }) => {
             <input
                 type={show ? "text" : "password"}
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}

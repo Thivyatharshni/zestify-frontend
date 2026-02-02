@@ -75,7 +75,7 @@ const Orders = ({ embedded = false }) => {
     const Content = () => {
         if (loading) return (
             <div className="py-20 flex justify-center">
-                <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
             </div>
         );
 
@@ -95,7 +95,7 @@ const Orders = ({ embedded = false }) => {
                             description="Hungry? Start exploring restaurants and discover your next favorite meal!"
                             action={
                                 <Link to={ROUTES.HOME}>
-                                    <Button variant="primary" className="py-4 px-8 font-black uppercase text-sm tracking-widest shadow-lg shadow-orange-100">Browse Restaurants</Button>
+                                    <Button variant="primary" className="py-4 px-8 font-black uppercase text-sm tracking-widest shadow-lg shadow-blue-100">Browse Restaurants</Button>
                                 </Link>
                             }
                         />

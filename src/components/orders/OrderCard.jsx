@@ -73,7 +73,7 @@ const OrderCard = ({ order }) => {
                 {order.items.map((item, idx) => (
                     <div key={idx} className="flex justify-between text-sm">
                         <span className="text-gray-500 font-bold">
-                            <span className="text-orange-500">{item.quantity}</span> x {item.name}
+                            <span className="text-blue-600">{item.quantity}</span> x {item.name}
                         </span>
                     </div>
                 ))}
@@ -102,7 +102,7 @@ const OrderCard = ({ order }) => {
                         <Link to={`/orders/${orderId}`}>
                             <Button
                                 variant="primary"
-                                className="bg-orange-600 hover:bg-orange-700 font-black uppercase text-[10px] tracking-widest px-6 shadow-lg shadow-orange-100"
+                                className="bg-blue-600 hover:bg-blue-700 font-black uppercase text-[10px] tracking-widest px-6 shadow-lg shadow-blue-100"
                             >
                                 Track Live
                             </Button>

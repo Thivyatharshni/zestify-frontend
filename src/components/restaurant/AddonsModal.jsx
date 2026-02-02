@@ -99,7 +99,7 @@ const AddonsModal = ({ isOpen, onClose, menuItem, onAdd }) => {
                 <div className="max-h-[60vh] overflow-y-auto p-6 space-y-8">
                     {loading ? (
                         <div className="py-12 flex justify-center">
-                            <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                         </div>
                     ) : (
                         <>
@@ -115,13 +115,13 @@ const AddonsModal = ({ isOpen, onClose, menuItem, onAdd }) => {
                                                 key={addon.id}
                                                 onClick={() => toggleAddon(addon, true)}
                                                 className={`flex justify-between items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${selectedAddons.find(a => a.id === addon.id)
-                                                    ? 'border-orange-500 bg-orange-50/30'
+                                                    ? 'border-blue-600 bg-blue-50/30'
                                                     : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     {selectedAddons.find(a => a.id === addon.id) ? (
-                                                        <CheckCircle2 size={20} className="text-orange-500" />
+                                                        <CheckCircle2 size={20} className="text-blue-600" />
                                                     ) : (
                                                         <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
                                                     )}
@@ -146,13 +146,13 @@ const AddonsModal = ({ isOpen, onClose, menuItem, onAdd }) => {
                                                 key={addon.id}
                                                 onClick={() => toggleAddon(addon, false)}
                                                 className={`flex justify-between items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${selectedAddons.find(a => a.id === addon.id)
-                                                    ? 'border-orange-500 bg-orange-50/30'
+                                                    ? 'border-blue-600 bg-blue-50/30'
                                                     : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     {selectedAddons.find(a => a.id === addon.id) ? (
-                                                        <CheckCircle2 size={20} className="text-orange-500" />
+                                                        <CheckCircle2 size={20} className="text-blue-600" />
                                                     ) : (
                                                         <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
                                                     )}

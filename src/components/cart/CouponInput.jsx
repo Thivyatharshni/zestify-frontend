@@ -107,7 +107,7 @@ const CouponInput = () => {
                     className="w-full flex items-center justify-between text-gray-700 hover:text-gray-900 font-semibold group transition-colors"
                 >
                     <div className="flex items-center gap-3">
-                        <TicketPercent size={18} className="text-orange-500 group-hover:text-orange-600" />
+                        <TicketPercent size={18} className="text-blue-600 group-hover:text-blue-700" />
                         <span className="text-sm">Apply Coupon</span>
                     </div>
                     <span className="text-gray-400 group-hover:text-gray-600 text-lg">›</span>

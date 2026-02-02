@@ -90,7 +90,7 @@ const CategoryPage = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex justify-center items-center bg-gray-50">
-                <Loader2 className="w-10 h-10 animate-spin text-orange-500" />
+                <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
             </div>
         );
     }

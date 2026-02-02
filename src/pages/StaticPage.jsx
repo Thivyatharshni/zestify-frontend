@@ -34,7 +34,7 @@ const StaticPage = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8">
-                <Link to={ROUTES.HOME} className="inline-flex items-center gap-2 text-gray-500 hover:text-violet-600 mb-6 transition-colors">
+                <Link to={ROUTES.HOME} className="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6 transition-colors">
                     <ArrowLeft size={20} /> Back to Home
                 </Link>
 
@@ -42,7 +42,7 @@ const StaticPage = () => {
                     {page.title}
                 </h1>
 
-                <div className="prose prose-violet max-w-none text-gray-600 leading-relaxed">
+                <div className="prose prose-blue max-w-none text-gray-600 leading-relaxed">
                     <p>{page.content}</p>
                     <p className="mt-4">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

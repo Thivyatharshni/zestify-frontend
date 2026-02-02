@@ -109,10 +109,10 @@ const Search = () => {
                         onChange={handleSearchInput}
                         onKeyDown={handleKeyDown}
                         autoFocus
-                        className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-lg"
+                        className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all text-lg"
                     />
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                        {loading ? <Loader2 size={24} className="animate-spin text-violet-500" /> : <SearchIcon size={24} />}
+                        {loading ? <Loader2 size={24} className="animate-spin text-blue-600" /> : <SearchIcon size={24} />}
                     </div>
                 </div>
             </div>

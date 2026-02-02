@@ -71,7 +71,7 @@ const Cart = () => {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 mt-12 md:mt-16">
-            <Loader2 className="w-12 h-12 animate-spin text-orange-500" />
+            <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
         </div>
     );
 
@@ -104,7 +104,7 @@ const Cart = () => {
                                 </div>
                                 {!user && (
                                     <Link to={ROUTES.LOGIN}>
-                                        <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-50 px-5 py-2 rounded-lg text-sm font-bold transition-all">
+                                        <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50 px-5 py-2 rounded-lg text-sm font-bold transition-all">
                                             Log In
                                         </Button>
                                     </Link>
@@ -113,17 +113,17 @@ const Cart = () => {
                         </div>
 
                         {/* Delivery Address - Highlighted */}
-                        <div className="bg-gradient-to-br from-orange-50 to-orange-50/50 p-5 md:p-7 rounded-xl shadow-sm border border-orange-200 transition-all hover:shadow-md">
+                        <div className="bg-gradient-to-br from-blue-50 to-blue-50/50 p-5 md:p-7 rounded-xl shadow-sm border border-blue-200 transition-all hover:shadow-md">
                             <div className="flex gap-4 items-start">
-                                <div className="w-11 h-11 bg-white rounded-lg text-orange-600 border border-orange-200 shadow-sm flex items-center justify-center flex-shrink-0">
+                                <div className="w-11 h-11 bg-white rounded-lg text-blue-600 border border-blue-200 shadow-sm flex items-center justify-center flex-shrink-0">
                                     <MapPin size={18} />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-start mb-4">
-                                        <h3 className="text-xs font-bold text-orange-700 uppercase tracking-wider">Delivery Address</h3>
+                                        <h3 className="text-xs font-bold text-blue-700 uppercase tracking-wider">Delivery Address</h3>
                                         <Button
                                             variant="ghost"
-                                            className="text-orange-600 hover:bg-orange-100/60 px-3 py-1.5 -mr-2 rounded-md flex items-center gap-1.5 text-sm font-bold transition-all"
+                                            className="text-blue-600 hover:bg-blue-100/60 px-3 py-1.5 -mr-2 rounded-md flex items-center gap-1.5 text-sm font-bold transition-all"
                                             onClick={() => setIsAddressModalOpen(true)}
                                         >
                                             <span className="hidden sm:inline">{addresses.length > 0 ? "Change" : "Add New"}</span>
@@ -134,7 +134,7 @@ const Cart = () => {
                                     {selectedAddress ? (
                                         <div>
                                             <div className="flex items-center gap-2 mb-2">
-                                                <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
+                                                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                                                 <p className="font-bold text-gray-900 text-xs uppercase tracking-widest">{selectedAddress.label || selectedAddress.type || 'Home'}</p>
                                             </div>
                                             <p className="text-gray-800 text-base md:text-lg leading-relaxed font-semibold">
@@ -187,7 +187,7 @@ const Cart = () => {
                     {/* Right Section: Cart Summary */}
                     <div className="w-full lg:w-[440px] xl:w-[480px] lg:sticky lg:top-6">
                         <div className="bg-white p-6 md:p-8 shadow-md rounded-xl border border-gray-200">
-                            
+
                             {/* Restaurant Header */}
                             {restaurant && (
                                 <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
@@ -239,8 +239,8 @@ const Cart = () => {
                                 </Link>
                             ) : (
                                 <Link to={ROUTES.LOGIN} className="block mt-8">
-                                    <Button 
-                                        variant="primary" 
+                                    <Button
+                                        variant="primary"
                                         className="w-full bg-gray-900 hover:bg-black py-4 text-base font-bold uppercase tracking-wide rounded-xl shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99]"
                                     >
                                         Login to Pay

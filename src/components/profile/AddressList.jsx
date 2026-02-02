@@ -28,7 +28,7 @@ const AddressList = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {addresses.map((addr) => (
-                    <div key={addr.id} className="border border-gray-200 rounded-lg p-4 relative group hover:border-violet-200 transition-colors">
+                    <div key={addr.id} className="border border-gray-200 rounded-lg p-4 relative group hover:border-blue-200 transition-colors">
                         <div className="flex items-start gap-3">
                             <addr.icon size={20} className="text-gray-400 mt-1" />
                             <div>
@@ -45,9 +45,9 @@ const AddressList = () => {
                             </button>
                         </div>
 
-                        <div className="mt-4 pt-4 border-t border-gray-50 flex gap-4 text-sm font-bold text-violet-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleEdit(addr.id)} className="hover:text-violet-700">EDIT</button>
-                            <button onClick={() => handleDelete(addr.id)} className="hover:text-violet-700">DELETE</button>
+                        <div className="mt-4 pt-4 border-t border-gray-50 flex gap-4 text-sm font-bold text-blue-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => handleEdit(addr.id)} className="hover:text-blue-800">EDIT</button>
+                            <button onClick={() => handleDelete(addr.id)} className="hover:text-blue-800">DELETE</button>
                         </div>
                     </div>
                 ))}

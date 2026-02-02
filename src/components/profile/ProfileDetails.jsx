@@ -62,7 +62,7 @@ const ProfileDetails = () => {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         disabled={!isEditing}
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-violet-500"
+                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                 </div>
 
@@ -73,7 +73,7 @@ const ProfileDetails = () => {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         disabled={!isEditing}
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-violet-500"
+                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                 </div>
 
@@ -89,7 +89,7 @@ const ProfileDetails = () => {
                 </div>
 
                 {isEditing && (
-                    <Button variant="primary" className="w-full bg-violet-600 hover:bg-violet-700" onClick={handleSave}>Save Changes</Button>
+                    <Button variant="primary" className="w-full bg-blue-600 hover:bg-blue-700" onClick={handleSave}>Save Changes</Button>
                 )}
             </div>
         </div>

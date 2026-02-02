@@ -95,7 +95,7 @@ const Restaurant = () => {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-white">
-            <Loader2 className="w-12 h-12 animate-spin text-orange-500" />
+            <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
         </div>
     );
 

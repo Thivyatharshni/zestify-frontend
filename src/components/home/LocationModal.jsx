@@ -29,7 +29,7 @@ const LocationModal = () => {
                         <input
                             type="text"
                             placeholder="Search for area, street name..."
-                            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all text-gray-900 placeholder:text-gray-400"
+                            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-gray-900 placeholder:text-gray-400"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                         />
@@ -39,7 +39,7 @@ const LocationModal = () => {
                     </div>
 
                     <button
-                        className="w-full flex items-center gap-3 p-3 text-violet-600 hover:bg-violet-50 rounded-lg transition-colors group"
+                        className="w-full flex items-center gap-3 p-3 text-blue-700 hover:bg-blue-50 rounded-lg transition-colors group"
                         onClick={() => handleSetLocation("Current Location")}
                     >
                         <Crosshair size={20} className="group-hover:scale-110 transition-transform" />

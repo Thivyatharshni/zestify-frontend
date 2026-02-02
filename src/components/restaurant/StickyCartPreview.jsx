@@ -15,7 +15,7 @@ const StickyCartPreview = () => {
     return (
         <div className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom duration-300">
             <Link to={ROUTES.CART}>
-                <div className="max-w-4xl mx-auto bg-green-600 text-white p-4 rounded-xl shadow-lg flex items-center justify-between hover:bg-green-700 transition-colors">
+                <div className="max-w-4xl mx-auto bg-blue-600 text-white p-4 rounded-xl shadow-lg flex items-center justify-between hover:bg-blue-700 transition-colors">
                     <div className="flex flex-col">
                         <span className="font-bold text-sm uppercase tracking-wide">
                             {cartItemCount} {cartItemCount === 1 ? 'Item' : 'Items'} | {formatPrice(totalPrice)}

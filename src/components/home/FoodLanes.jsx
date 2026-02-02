@@ -150,14 +150,14 @@ const FoodLanes = () => {
                                     <button className="group/btn relative inline-flex items-center gap-4 bg-white text-black px-8 md:px-10 py-4 md:py-5 rounded-full overflow-hidden transition-all hover:pr-10">
                                         <span className="relative z-10 text-lg md:text-xl font-black uppercase tracking-widest">{lane.cta}</span>
                                         <ChevronRight className="relative z-10 w-6 h-6 md:w-7 md:h-7 transition-transform group-hover/btn:translate-x-2" />
-                                        <div className="absolute inset-0 bg-orange-500 transform scale-x-0 group-hover/btn:scale-x-100 transition-transform origin-left duration-500"></div>
+                                        <div className="absolute inset-0 bg-blue-600 transform scale-x-0 group-hover/btn:scale-x-100 transition-transform origin-left duration-500"></div>
                                     </button>
                                 </div>
                             </div>
 
                             {/* Visual Depth Elements */}
                             <div className={`absolute top-1/4 right-1/4 w-64 h-64 bg-white/5 rounded-full blur-[100px] pointer-events-none`}></div>
-                            <div className={`absolute bottom-1/4 left-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-[120px] pointer-events-none`}></div>
+                            <div className={`absolute bottom-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none`}></div>
                         </div>
                     );
                 })}

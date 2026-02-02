@@ -7,7 +7,7 @@ export const IMAGES = {
 };
 
 export const COLORS = {
-    PRIMARY: "violet-600",
+    PRIMARY: "blue-600",
     SECONDARY: "gray-500",
     TEXT_PRIMARY: "gray-900",
     TEXT_SECONDARY: "gray-500",

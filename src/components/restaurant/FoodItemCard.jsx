@@ -124,20 +124,20 @@ const FoodItemCard = ({ item, restaurantId }) => {
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 shadow-lg rounded-lg bg-white min-w-[100px]">
                     {adding ? (
                         <div className="flex justify-center items-center h-9">
-                            <Loader2 className="animate-spin text-green-600 h-5 w-5" />
+                            <Loader2 className="animate-spin text-blue-600 h-5 w-5" />
                         </div>
                     ) : totalQuantity > 0 ? (
                         <div className="flex items-center h-9 border border-gray-200 rounded-lg overflow-hidden">
                             <button onClick={handleDecrement} className="w-8 h-full flex items-center justify-center text-gray-600 hover:bg-gray-100 font-bold">-</button>
-                            <span className="w-8 h-full flex items-center justify-center text-green-600 font-bold text-sm bg-white">{totalQuantity}</span>
-                            <button onClick={handleIncrement} className="w-8 h-full flex items-center justify-center text-green-600 hover:bg-gray-100 font-bold">+</button>
+                            <span className="w-8 h-full flex items-center justify-center text-blue-600 font-bold text-sm bg-white">{totalQuantity}</span>
+                            <button onClick={handleIncrement} className="w-8 h-full flex items-center justify-center text-blue-600 hover:bg-gray-100 font-bold">+</button>
                         </div>
                     ) : (
                         <Button
                             variant="primary"
                             size="sm"
                             disabled={item.isAvailable === false}
-                            className={`bg-white text-green-600 border border-gray-200 hover:bg-gray-50 h-9 w-full px-6 font-bold shadow-sm uppercase text-xs ${item.isAvailable === false ? 'text-gray-400 border-gray-100 cursor-not-allowed' : ''}`}
+                            className={`bg-white text-blue-600 border border-gray-200 hover:bg-gray-50 h-9 w-full px-6 font-bold shadow-sm uppercase text-xs ${item.isAvailable === false ? 'text-gray-400 border-gray-100 cursor-not-allowed' : ''}`}
                             onClick={handleAddClick}
                         >
                             {item.isAvailable === false ? 'Sold Out' : 'Add'}

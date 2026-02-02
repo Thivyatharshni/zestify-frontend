@@ -27,8 +27,8 @@ const FilterBar = ({ activeFilters, onToggle }) => {
                     key={filter}
                     onClick={() => onToggle(filter)}
                     className={`px-4 py-2 rounded-full border text-base font-bold transition-all whitespace-nowrap ${activeFilters.includes(filter)
-                        ? 'bg-orange-500 text-white border-orange-500 shadow-md scale-105'
-                        : 'bg-white text-gray-900 border-gray-200 hover:border-orange-200 hover:text-orange-600'
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-md scale-105'
+                        : 'bg-white text-gray-900 border-gray-200 hover:border-blue-200 hover:text-blue-600'
                         }`}
                 >
                     {filter}

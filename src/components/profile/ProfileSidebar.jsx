@@ -27,7 +27,7 @@ const ProfileSidebar = ({ activeTab, setActiveTab }) => {
                         key={item.id}
                         onClick={() => setActiveTab(item.id)}
                         className={`flex items-center gap-3 px-6 py-4 text-sm font-medium transition-colors border-l-4 ${activeTab === item.id
-                            ? 'bg-violet-50 text-violet-600 border-violet-500'
+                            ? 'bg-blue-50 text-blue-700 border-blue-600'
                             : 'text-gray-600 hover:bg-gray-50 border-transparent'
                             }`}
                     >

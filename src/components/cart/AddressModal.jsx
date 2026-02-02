@@ -67,9 +67,9 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                         onSelect(addr);
                                         onClose();
                                     }}
-                                    className="p-4 border-2 border-gray-100 hover:border-violet-200 rounded-2xl cursor-pointer transition-all flex gap-4 group"
+                                    className="p-4 border-2 border-gray-100 hover:border-blue-200 rounded-2xl cursor-pointer transition-all flex gap-4 group"
                                 >
-                                    <div className="p-3 bg-gray-50 rounded-xl text-gray-400 group-hover:bg-violet-50 group-hover:text-violet-600">
+                                    <div className="p-3 bg-gray-50 rounded-xl text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-600">
                                         {addr.label?.toLowerCase() === 'home' ? <Home size={20} /> :
                                             addr.label?.toLowerCase() === 'work' ? <Briefcase size={20} /> :
                                                 <MapPin size={20} />}
@@ -88,7 +88,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
 
                             <button
                                 onClick={() => setView('add')}
-                                className="w-full p-4 border-2 border-dashed border-gray-200 hover:border-violet-500 rounded-2xl flex items-center justify-center gap-2 text-violet-600 font-bold transition-all"
+                                className="w-full p-4 border-2 border-dashed border-gray-200 hover:border-blue-600 rounded-2xl flex items-center justify-center gap-2 text-blue-700 font-bold transition-all"
                             >
                                 <Plus size={20} />
                                 Add New Address
@@ -102,7 +102,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                         key={l}
                                         type="button"
                                         onClick={() => setFormData(p => ({ ...p, label: l }))}
-                                        className={`py-2 rounded-xl text-xs font-black uppercase tracking-widest border-2 transition-all ${formData.label === l ? 'border-violet-500 bg-violet-50 text-violet-600' : 'border-gray-100 text-gray-400 hover:border-gray-200'
+                                        className={`py-2 rounded-xl text-xs font-black uppercase tracking-widest border-2 transition-all ${formData.label === l ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-100 text-gray-400 hover:border-gray-200'
                                             }`}
                                     >
                                         {l}
@@ -117,7 +117,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                     name="name"
                                     value={formData.name}
                                     onChange={handleInputChange}
-                                    className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-violet-500 focus:bg-white transition-all outline-none font-bold"
+                                    className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-blue-600 focus:bg-white transition-all outline-none font-bold"
                                     placeholder="e.g. Sneha"
                                 />
                             </div>
@@ -129,7 +129,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleInputChange}
-                                    className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-violet-500 focus:bg-white transition-all outline-none font-bold"
+                                    className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-blue-600 focus:bg-white transition-all outline-none font-bold"
                                     placeholder="10-digit mobile number"
                                 />
                             </div>
@@ -141,7 +141,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                     name="street"
                                     value={formData.street}
                                     onChange={handleInputChange}
-                                    className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-violet-500 focus:bg-white transition-all outline-none font-bold"
+                                    className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-blue-600 focus:bg-white transition-all outline-none font-bold"
                                     placeholder="e.g. 12/4 MG Road"
                                 />
                             </div>
@@ -154,7 +154,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                         name="area"
                                         value={formData.area}
                                         onChange={handleInputChange}
-                                        className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-violet-500 focus:bg-white transition-all outline-none font-bold"
+                                        className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-blue-600 focus:bg-white transition-all outline-none font-bold"
                                         placeholder="e.g. Indiranagar"
                                     />
                                 </div>
@@ -165,7 +165,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                         name="pincode"
                                         value={formData.pincode}
                                         onChange={handleInputChange}
-                                        className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-violet-500 focus:bg-white transition-all outline-none font-bold"
+                                        className="w-full p-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-blue-600 focus:bg-white transition-all outline-none font-bold"
                                         placeholder="6 digits"
                                     />
                                 </div>
@@ -183,7 +183,7 @@ const AddressModal = ({ isOpen, onClose, addresses, onSelect, onAddressAdded }) 
                                 <Button
                                     type="submit"
                                     variant="primary"
-                                    className="flex-2 bg-violet-600 hover:bg-violet-700 py-4 font-black uppercase tracking-widest"
+                                    className="flex-2 bg-blue-600 hover:bg-blue-700 py-4 font-black uppercase tracking-widest"
                                     isLoading={loading}
                                 >
                                     Save Address

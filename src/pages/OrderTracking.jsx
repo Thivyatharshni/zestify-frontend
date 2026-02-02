@@ -65,7 +65,7 @@ const OrderTracking = () => {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-white mt-12 md:mt-16">
-            <Loader2 className="w-12 h-12 animate-spin text-orange-500" />
+            <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
         </div>
     );
 
@@ -104,7 +104,7 @@ const OrderTracking = () => {
                     </Link>
                     <div className="text-center">
                         <h1 className="text-3xl font-black mb-2 tracking-tighter">{getStatusText(order.status)}</h1>
-                        <div className="text-5xl font-black text-orange-500 mb-4 tracking-tighter">
+                        <div className="text-5xl font-black text-blue-500 mb-4 tracking-tighter">
                             {order.status === 'DELIVERED' ? '✓' : order.status === 'CANCELLED' ? '✕' : '35 mins'}
                         </div>
                         <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">Order #{order.id.slice(-6)} • {restaurant.name}</p>
@@ -121,7 +121,7 @@ const OrderTracking = () => {
                         <div className="overflow-hidden">
                             <h3 className="font-black text-xl text-gray-900 leading-tight mb-1">{restaurant.name}</h3>
                             <div className="flex items-center text-gray-400 text-xs font-bold uppercase tracking-widest">
-                                <MapPin size={14} className="mr-1 text-orange-500" />
+                                <MapPin size={14} className="mr-1 text-blue-500" />
                                 <span className="truncate">{restaurant.location}</span>
                             </div>
                         </div>
