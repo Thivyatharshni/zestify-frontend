@@ -31,9 +31,16 @@ const LoginForm = () => {
 
             login(user, token);
 
-            // Redirect to return URL or home
-            const returnUrl = location.state?.returnUrl || ROUTES.HOME;
-            navigate(returnUrl, { replace: true });
+            // Role-based dashboard redirect
+            const dashboardMap = {
+                'super_admin': '/admin/dashboard',
+                'restaurant_admin': '/restaurant/dashboard',
+                'delivery_partner': '/delivery/dashboard',
+                'user': '/'
+            };
+
+            const redirectPath = dashboardMap[user.role] || '/';
+            navigate(redirectPath, { replace: true });
         } catch (err) {
             console.error('Login failed:', err);
             setError(typeof err === 'string' ? err : err.message || 'Login failed. Please check your credentials.');
