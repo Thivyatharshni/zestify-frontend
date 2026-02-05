@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
     ShoppingBag,
     Search,
@@ -14,7 +15,8 @@ import {
     Badge,
     Table,
     Loader,
-    EmptyState
+    EmptyState,
+    cn
 } from '../../components/ui/DashboardUI';
 import { adminService } from '../../services/dashboard/adminService';
 import toast from 'react-hot-toast';
@@ -23,6 +25,8 @@ const AdminOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const location = useLocation();
+    const highlightId = location.state?.highlightId;
 
     useEffect(() => {
         fetchOrders();
@@ -64,26 +68,26 @@ const AdminOrders = () => {
 
     return (
         <div className="space-y-8 pb-10">
-            {/* Dark Header */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600 via-cyan-700 to-blue-900 rounded-[2.5rem] p-8 shadow-2xl border border-cyan-500/20">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+            {/* Glass Header */}
+            <div className="relative overflow-hidden bg-white/10 backdrop-blur-3xl rounded-[2.5rem] p-8 shadow-2xl border border-white/20">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-slate-500/20 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-900/10 rounded-full blur-3xl animate-pulse delay-1000" />
                 <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
                         <div>
                             <div className="flex items-center gap-3 mb-3">
                                 <div className="p-3 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg">
-                                    <ShoppingBag className="text-cyan-300" size={28} />
+                                    <ShoppingBag className="text-white" size={28} />
                                 </div>
-                                <h1 className="text-4xl font-black text-white tracking-tight flex items-center gap-3">
+                                <h1 className="text-4xl font-black text-white tracking-tight flex items-center gap-3 drop-shadow-md">
                                     Global Order Monitor
-                                    <Sparkles className="text-cyan-300" size={28} />
+                                    <Sparkles className="text-yellow-300" size={28} />
                                 </h1>
                             </div>
-                            <p className="text-cyan-100 font-medium">Real-time view of all platform orders</p>
+                            <p className="text-white/70 font-medium">Real-time view of all platform orders</p>
                         </div>
                         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/20 px-4 py-2 rounded-2xl shadow-lg">
-                            <Calendar size={18} className="text-cyan-300" />
+                            <Calendar size={18} className="text-white" />
                             <span className="text-sm font-black text-white">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</span>
                         </div>
                     </div>
@@ -92,7 +96,7 @@ const AdminOrders = () => {
                         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 hover:bg-white/15 transition-all cursor-pointer group">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-xs font-bold text-cyan-200 uppercase tracking-widest mb-1">Total Orders</p>
+                                    <p className="text-xs font-bold text-white/60 uppercase tracking-widest mb-1">Total Orders</p>
                                     <h3 className="text-3xl font-black text-white">{orders.length}</h3>
                                 </div>
                                 <div className="p-3 bg-white/10 rounded-xl group-hover:scale-110 transition-transform">
@@ -103,7 +107,7 @@ const AdminOrders = () => {
                         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 hover:bg-white/15 transition-all cursor-pointer group">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-xs font-bold text-cyan-200 uppercase tracking-widest mb-1">Today's Orders</p>
+                                    <p className="text-xs font-bold text-white/60 uppercase tracking-widest mb-1">Today's Orders</p>
                                     <h3 className="text-3xl font-black text-white">{todayOrders}</h3>
                                 </div>
                                 <div className="p-3 bg-emerald-500/20 rounded-xl group-hover:scale-110 transition-transform">
@@ -114,7 +118,7 @@ const AdminOrders = () => {
                         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 hover:bg-white/15 transition-all cursor-pointer group">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-xs font-bold text-cyan-200 uppercase tracking-widest mb-1">Total Revenue</p>
+                                    <p className="text-xs font-bold text-white/60 uppercase tracking-widest mb-1">Total Revenue</p>
                                     <h3 className="text-3xl font-black text-white">₹{totalRevenue.toLocaleString()}</h3>
                                 </div>
                                 <div className="p-3 bg-yellow-500/20 rounded-xl group-hover:scale-110 transition-transform">
@@ -126,14 +130,14 @@ const AdminOrders = () => {
                 </div>
             </div>
 
-            {/* Dark Search Bar */}
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-cyan-500/20 hover:border-cyan-400/30 transition-all hover:shadow-xl hover:shadow-cyan-500/20 rounded-[2rem] p-6">
+            {/* Glass Search Bar */}
+            <div className="bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/15 transition-all shadow-xl rounded-[2rem] p-6">
                 <div className="relative group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-cyan-400 transition-colors" size={22} />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 group-focus-within:text-white transition-colors" size={22} />
                     <input
                         type="text"
                         placeholder="Search by order ID, customer, or restaurant..."
-                        className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-700/50 border-2 border-slate-600/50 focus:bg-slate-700 focus:border-cyan-500/50 focus:ring-4 focus:ring-cyan-500/20 transition-all text-base font-bold text-white placeholder:text-slate-300"
+                        className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/5 border border-white/10 focus:bg-white/10 focus:border-white/30 focus:ring-4 focus:ring-white/10 transition-all text-base font-bold text-white placeholder:text-white/40 outline-none"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -141,27 +145,33 @@ const AdminOrders = () => {
             </div>
 
             {filteredOrders.length > 0 ? (
-                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border-2 border-cyan-500/20 overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-cyan-500/20 transition-all">
+                <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 overflow-hidden shadow-xl hover:shadow-2xl transition-all">
                     <Table headers={['Order ID', 'Customer', 'Restaurant', 'Amount', 'Time', 'Status']} dark>
                         {filteredOrders.map((order) => (
-                            <tr key={order._id} className="hover:bg-slate-700/50 transition-all border-b border-slate-700/50 last:border-0">
+                            <tr
+                                key={order._id}
+                                className={cn(
+                                    "hover:bg-white/5 transition-all border-b border-white/5 last:border-0",
+                                    highlightId === order._id && "bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.5)] border-blue-500/30 scale-[1.01] z-10 relative"
+                                )}
+                            >
                                 <td className="px-6 py-5">
-                                    <span className="text-sm font-black text-cyan-300 uppercase tracking-tighter">#{order._id.slice(-6)}</span>
+                                    <span className="text-sm font-black text-white/60 uppercase tracking-tighter">#{order._id.slice(-6)}</span>
                                 </td>
                                 <td className="px-6 py-5">
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-blue-500/20 text-blue-400 rounded-xl border border-blue-500/30">
+                                        <div className="p-2 bg-white/10 text-white rounded-xl border border-white/20 backdrop-blur-sm">
                                             <User size={18} />
                                         </div>
                                         <div>
                                             <span className="text-base font-bold text-white block">{order.user?.name}</span>
-                                            <span className="text-sm font-bold text-slate-300">+{order.user?.phone}</span>
+                                            <span className="text-sm font-bold text-white/60">+{order.user?.phone}</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-5">
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-indigo-500/20 text-indigo-400 rounded-xl border border-indigo-500/30">
+                                        <div className="p-2 bg-white/10 text-white rounded-xl border border-white/20 backdrop-blur-sm">
                                             <Store size={18} />
                                         </div>
                                         <span className="text-base font-bold text-white">{order.restaurant?.name}</span>
@@ -171,7 +181,7 @@ const AdminOrders = () => {
                                     <span className="text-base font-black text-white">₹{order.bill?.grandTotal}</span>
                                 </td>
                                 <td className="px-6 py-5">
-                                    <span className="text-sm font-bold text-slate-200">
+                                    <span className="text-sm font-bold text-white/80">
                                         {new Date(order.createdAt).toLocaleString('en-US', {
                                             month: 'short',
                                             day: 'numeric',
@@ -181,7 +191,7 @@ const AdminOrders = () => {
                                     </span>
                                 </td>
                                 <td className="px-6 py-5">
-                                    <Badge variant={statusVariants[order.orderStatus]} dark>
+                                    <Badge variant={statusVariants[order.orderStatus]} dark className="shadow-sm shadow-black/5">
                                         {order.orderStatus.replace(/_/g, ' ')}
                                     </Badge>
                                 </td>
@@ -190,7 +200,7 @@ const AdminOrders = () => {
                     </Table>
                 </div>
             ) : (
-                <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-cyan-500/20 rounded-3xl p-12">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
                     <EmptyState title="No Orders" message="No orders match your search criteria." icon={ShoppingBag} dark />
                 </div>
             )}

@@ -7,14 +7,15 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs));
 }
 
-// Button Component with Dark Theme Support
+// Button Component with Glass Theme Support
 export const Button = ({ className, variant = 'primary', size = 'md', dark = false, children, ...props }) => {
+    // dark prop now enables Glassmorphism for Super Admin
     const variants = dark ? {
-        primary: 'bg-blue-500 text-white hover:bg-blue-600 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50',
-        secondary: 'bg-slate-700 text-white hover:bg-slate-600 shadow-lg shadow-slate-700/30',
-        outline: 'border-2 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/50',
-        ghost: 'text-slate-300 hover:bg-slate-700/50 hover:text-white',
-        danger: 'bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/30',
+        primary: 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md shadow-lg border border-white/10',
+        secondary: 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md border border-white/10',
+        outline: 'border border-white/30 text-white hover:bg-white/10',
+        ghost: 'text-white/70 hover:bg-white/10 hover:text-white',
+        danger: 'bg-red-500/80 text-white hover:bg-red-600/90 shadow-lg shadow-red-500/20 backdrop-blur-md',
     } : {
         primary: 'bg-orange-500 text-white hover:bg-orange-600 shadow-md hover:shadow-lg',
         secondary: 'bg-slate-800 text-white hover:bg-slate-900 shadow-md',
@@ -24,9 +25,9 @@ export const Button = ({ className, variant = 'primary', size = 'md', dark = fal
     };
 
     const sizes = {
-        sm: 'px-3 py-1.5 text-xs font-medium',
-        md: 'px-4 py-2 text-sm font-semibold',
-        lg: 'px-6 py-3 text-base font-bold',
+        sm: 'px-4 py-2 text-sm font-semibold',
+        md: 'px-6 py-3 text-base font-bold',
+        lg: 'px-8 py-4 text-lg font-black',
     };
 
     return (
@@ -44,11 +45,13 @@ export const Button = ({ className, variant = 'primary', size = 'md', dark = fal
     );
 };
 
-// Card Component with Dark Theme Support
+// Card Component with Glass Theme Support
 export const Card = ({ className, dark = false, children }) => (
     <div className={cn(
-        'rounded-2xl shadow-sm border p-6 hover:shadow-md transition-shadow',
-        dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100',
+        'rounded-2xl transition-all duration-300',
+        dark
+            ? 'bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl hover:scale-[1.01] hover:bg-white/15'
+            : 'bg-white border border-slate-100 shadow-sm hover:shadow-md',
         className
     )}>
         {children}
@@ -56,40 +59,53 @@ export const Card = ({ className, dark = false, children }) => (
 );
 
 // StatCard Component
-export const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'orange' }) => {
-    const colors = {
-        orange: 'bg-orange-50 text-orange-600',
-        blue: 'bg-blue-50 text-blue-600',
-        green: 'bg-green-50 text-green-600',
-        purple: 'bg-purple-50 text-purple-600',
-    };
+export const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'orange', dark = false }) => {
+    // If dark (Super Admin), override colors to be glass/white
+    // We intentionally ignore the specific 'color' prop for the icon background to keep it uniform and clean in Glass mode,
+    // or we can use it for subtle tint. Let's use subtle tint.
 
     return (
-        <Card className="flex items-center gap-4">
-            <div className={cn('p-4 rounded-xl', colors[color])}>
-                <Icon size={24} />
+        <Card dark={dark} className="flex items-center gap-6 p-8">
+            <div className={cn(
+                'p-5 rounded-2xl backdrop-blur-md transition-transform hover:scale-110',
+                dark
+                    ? 'bg-white/10 border border-white/10 shadow-inner'
+                    : {
+                        orange: 'bg-orange-50 text-orange-600',
+                        blue: 'bg-blue-50 text-blue-600',
+                        green: 'bg-green-50 text-green-600',
+                        purple: 'bg-purple-50 text-purple-600',
+                    }[color]
+            )}>
+                <Icon size={32} className={dark ? 'text-white drop-shadow-sm' : ''} />
             </div>
             <div>
-                <p className="text-sm font-medium text-slate-500">{title}</p>
-                <h3 className="text-2xl font-bold text-slate-900">{value}</h3>
+                <p className={cn('text-base font-bold mb-1', dark ? 'text-white/70' : 'text-slate-500')}>{title}</p>
+                <h3 className={cn('text-4xl font-black tracking-tight', dark ? 'text-white drop-shadow-md' : 'text-slate-900')}>{value}</h3>
                 {trend && (
-                    <p className={cn('text-xs mt-1 font-medium', trend === 'up' ? 'text-green-600' : 'text-red-600')}>
-                        {trend === 'up' ? '↑' : '↓'} {trendValue}
-                    </p>
+                    <div className={cn('flex items-center gap-1 text-sm font-bold mt-2',
+                        dark
+                            ? (trend === 'up' ? 'text-green-300' : 'text-red-300')
+                            : (trend === 'up' ? 'text-green-600' : 'text-red-600')
+                    )}>
+                        <span className={cn('px-2 py-0.5 rounded-full bg-white/10', dark && 'backdrop-blur-sm')}>
+                            {trend === 'up' ? '↑' : '↓'} {trendValue}
+                        </span>
+                    </div>
                 )}
             </div>
         </Card>
     );
 };
 
-// Badge Component with Dark Theme Support
+// Badge Component with Glass Theme Support
 export const Badge = ({ children, variant = 'neutral', className, dark = false }) => {
     const variants = dark ? {
-        neutral: 'bg-slate-700 text-slate-300 border border-slate-600',
-        success: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30',
-        warning: 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
-        danger: 'bg-red-500/20 text-red-300 border border-red-500/30',
-        primary: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
+        neutral: 'bg-white/10 text-white/80 border border-white/20 backdrop-blur-md',
+        success: 'bg-green-500/20 text-green-100 border border-green-500/30 backdrop-blur-md',
+        warning: 'bg-amber-500/20 text-amber-100 border border-amber-500/30 backdrop-blur-md',
+        danger: 'bg-red-500/20 text-red-100 border border-red-500/30 backdrop-blur-md',
+        primary: 'bg-blue-500/20 text-blue-100 border border-blue-500/30 backdrop-blur-md',
     } : {
         neutral: 'bg-slate-100 text-slate-600',
         success: 'bg-green-100 text-green-700',
@@ -99,77 +115,79 @@ export const Badge = ({ children, variant = 'neutral', className, dark = false }
     };
 
     return (
-        <span className={cn('px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest', variants[variant], className)}>
+        <span className={cn('px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-widest', variants[variant], className)}>
             {children}
         </span>
     );
 };
 
-// Table Component with Dark Theme Support
+// Table Component with Glass Theme Support
 export const Table = ({ headers, children, dark = false }) => (
     <div className={cn(
-        'w-full overflow-x-auto rounded-3xl border',
-        dark ? 'border-slate-700 bg-slate-800' : 'border-slate-100 bg-white'
+        'w-full overflow-x-auto rounded-3xl border transition-all',
+        dark
+            ? 'bg-white/5 backdrop-blur-md border-white/20 shadow-xl'
+            : 'border-slate-100 bg-white'
     )}>
         <table className="w-full text-left border-collapse">
-            <thead className={cn('border-b', dark ? 'bg-slate-700/50 border-slate-700' : 'bg-slate-50/50 border-slate-100')}>
+            <thead className={cn('border-b', dark ? 'bg-white/5 border-white/10' : 'bg-slate-50/50 border-slate-100')}>
                 <tr>
                     {headers.map((header, idx) => (
                         <th key={idx} className={cn(
-                            'px-6 py-5 text-xs font-black uppercase tracking-[0.15em] whitespace-nowrap',
-                            dark ? 'text-slate-300' : 'text-slate-400'
+                            'px-6 py-6 text-sm font-black uppercase tracking-[0.15em] whitespace-nowrap',
+                            dark ? 'text-white/80 shadow-sm' : 'text-slate-400'
                         )}>
                             {header}
                         </th>
                     ))}
                 </tr>
             </thead>
-            <tbody className={cn('divide-y', dark ? 'divide-slate-700' : 'divide-slate-50')}>
+            <tbody className={cn('divide-y', dark ? 'divide-white/10 text-white font-medium text-base' : 'divide-slate-50')}>
                 {children}
             </tbody>
         </table>
     </div>
 );
 
-// Input Component with Dark Theme Support
+// Input Component with Glass Theme Support
 export const Input = ({ label, error, className, dark = false, ...props }) => (
-    <div className="w-full space-y-1.5">
-        {label && <label className={cn('text-xs font-black uppercase tracking-widest ml-1', dark ? 'text-slate-400' : 'text-slate-500')}>{label}</label>}
+    <div className="w-full space-y-2">
+        {label && <label className={cn('text-xs font-black uppercase tracking-widest ml-1', dark ? 'text-white/80' : 'text-slate-500')}>{label}</label>}
         <input
             className={cn(
-                'w-full px-5 py-3.5 rounded-2xl border outline-none transition-all text-sm font-semibold',
+                'w-full px-5 py-4 rounded-2xl border outline-none transition-all text-base font-semibold',
                 dark
-                    ? 'border-slate-600 bg-slate-700/50 focus:bg-slate-700 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 placeholder:text-slate-500 text-white'
+                    ? 'border-white/20 bg-white/10 focus:bg-white/20 focus:ring-4 focus:ring-white/10 focus:border-white/40 placeholder:text-white/40 text-white backdrop-blur-sm'
                     : 'border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500 placeholder:text-slate-300',
-                error && 'border-red-500 focus:ring-red-500/5 focus:border-red-500',
+                error && 'border-red-500 focus:ring-red-500/10 focus:border-red-500',
                 className
             )}
             {...props}
         />
-        {error && <p className="text-[10px] font-bold text-red-500 ml-1">{error}</p>}
+        {error && <p className="text-xs font-bold text-red-400 ml-1 backdrop-blur-sm inline-block px-2 py-0.5 rounded-lg bg-red-500/10">{error}</p>}
     </div>
 );
 
-// Textarea Component with Dark Theme Support
+// Textarea Component with Glass Theme Support
 export const Textarea = ({ label, error, className, dark = false, ...props }) => (
-    <div className="w-full space-y-1.5">
-        {label && <label className={cn('text-xs font-black uppercase tracking-widest ml-1', dark ? 'text-slate-400' : 'text-slate-500')}>{label}</label>}
+    <div className="w-full space-y-2">
+        {label && <label className={cn('text-xs font-black uppercase tracking-widest ml-1', dark ? 'text-white/80' : 'text-slate-500')}>{label}</label>}
         <textarea
             className={cn(
-                'w-full px-5 py-3.5 rounded-2xl border outline-none transition-all text-sm font-semibold min-h-[120px]',
+                'w-full px-5 py-4 rounded-2xl border outline-none transition-all text-base font-semibold min-h-[140px]',
                 dark
-                    ? 'border-slate-600 bg-slate-700/50 focus:bg-slate-700 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 placeholder:text-slate-500 text-white'
+                    ? 'border-white/20 bg-white/10 focus:bg-white/20 focus:ring-4 focus:ring-white/10 focus:border-white/40 placeholder:text-white/40 text-white backdrop-blur-sm scollbar-hide'
                     : 'border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500 placeholder:text-slate-300',
-                error && 'border-red-500 focus:ring-red-500/5 focus:border-red-500',
+                error && 'border-red-500 focus:ring-red-500/10 focus:border-red-500',
                 className
             )}
             {...props}
         />
-        {error && <p className="text-[10px] font-bold text-red-500 ml-1">{error}</p>}
+        {error && <p className="text-xs font-bold text-red-400 ml-1 backdrop-blur-sm inline-block px-2 py-0.5 rounded-lg bg-red-500/10">{error}</p>}
     </div>
 );
 
-// Modal Component with Dark Theme Support
+// Modal Component with Glass Theme Support
 export const Modal = ({ isOpen, onClose, title, children, footer, dark = false }) => {
     if (!isOpen) return null;
 
@@ -181,24 +199,26 @@ export const Modal = ({ isOpen, onClose, title, children, footer, dark = false }
             />
             <div className={cn(
                 'relative rounded-[2.5rem] shadow-2xl w-full max-w-xl max-h-[85vh] overflow-hidden animate-in zoom-in-95 fade-in duration-300 flex flex-col',
-                dark ? 'bg-slate-800 border-2 border-slate-700' : 'bg-white border border-white/20'
+                dark
+                    ? 'bg-white/10 backdrop-blur-xl border border-white/20'
+                    : 'bg-white border border-white/20'
             )}>
                 <div className={cn(
                     'px-10 py-8 border-b flex items-center justify-between',
-                    dark ? 'border-slate-700 bg-slate-800' : 'border-slate-50 bg-white'
+                    dark ? 'border-white/10 bg-white/5' : 'border-slate-50 bg-white'
                 )}>
                     <h2 className={cn('text-2xl font-black tracking-tighter', dark ? 'text-white' : 'text-slate-900')}>{title}</h2>
-                    <button onClick={onClose} className={cn('p-2.5 rounded-2xl transition-all', dark ? 'hover:bg-slate-700' : 'hover:bg-slate-50')}>
-                        <X size={20} className={dark ? 'text-slate-400' : 'text-slate-400'} />
+                    <button onClick={onClose} className={cn('p-2.5 rounded-2xl transition-all', dark ? 'hover:bg-white/10 text-white/70 hover:text-white' : 'hover:bg-slate-50 text-slate-400')}>
+                        <X size={20} />
                     </button>
                 </div>
-                <div className={cn('px-10 py-8 overflow-y-auto flex-1', dark && 'text-slate-200')}>
+                <div className={cn('px-10 py-8 overflow-y-auto flex-1 scrollbar-hide', dark && 'text-white')}>
                     {children}
                 </div>
                 {footer && (
                     <div className={cn(
                         'px-10 py-6 border-t flex justify-end gap-3',
-                        dark ? 'border-slate-700 bg-slate-700/30' : 'border-slate-50 bg-slate-50/30'
+                        dark ? 'border-white/10 bg-white/5' : 'border-slate-50 bg-slate-50/30'
                     )}>
                         {footer}
                     </div>
@@ -208,10 +228,10 @@ export const Modal = ({ isOpen, onClose, title, children, footer, dark = false }
     );
 };
 
-// Pagination Component with Dark Theme Support
+// Pagination Component with Glass Theme Support
 export const Pagination = ({ currentPage, totalPages, onPageChange, dark = false }) => (
     <div className="flex items-center justify-between mt-8 px-2">
-        <p className={cn('text-xs font-bold italic', dark ? 'text-slate-400' : 'text-slate-400')}>
+        <p className={cn('text-xs font-bold italic', dark ? 'text-white/60' : 'text-slate-400')}>
             Page {currentPage} of {totalPages}
         </p>
         <div className="flex items-center gap-1.5">
@@ -234,10 +254,10 @@ export const Pagination = ({ currentPage, totalPages, onPageChange, dark = false
                             'h-10 w-10 rounded-xl text-xs font-black transition-all',
                             currentPage === idx + 1
                                 ? dark
-                                    ? 'bg-blue-500 text-white shadow-xl shadow-blue-500/30'
+                                    ? 'bg-white/20 text-white shadow-lg border border-white/20 backdrop-blur-md'
                                     : 'bg-orange-500 text-white shadow-xl shadow-orange-500/20'
                                 : dark
-                                    ? 'text-slate-400 hover:bg-slate-700 hover:text-slate-200'
+                                    ? 'text-white/50 hover:bg-white/10 hover:text-white'
                                     : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
                         )}
                     >
@@ -259,38 +279,44 @@ export const Pagination = ({ currentPage, totalPages, onPageChange, dark = false
     </div>
 );
 
-// Loader Component with Dark Theme Support
+// Loader Component with Glass Theme Support
 export const Loader = ({ dark = false }) => (
     <div className={cn(
-        'flex flex-col items-center justify-center py-24 gap-6 rounded-[2.5rem] border shadow-sm',
-        dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-50'
+        'flex flex-col items-center justify-center py-24 gap-6 rounded-[2.5rem] border shadow-sm transition-all',
+        dark
+            ? 'bg-white/5 border-white/10 backdrop-blur-md'
+            : 'bg-white border-slate-50'
     )}>
         <div className={cn(
             'w-14 h-14 border-[5px] rounded-full animate-spin shadow-lg',
             dark
-                ? 'border-blue-900 border-t-blue-500 shadow-blue-500/20'
+                ? 'border-white/10 border-t-white shadow-white/10'
                 : 'border-orange-50 border-t-orange-500 shadow-orange-500/5'
         )} />
         <p className={cn(
             'text-[10px] font-black uppercase tracking-[0.3em] animate-pulse',
-            dark ? 'text-slate-500' : 'text-slate-300'
+            dark ? 'text-white/70' : 'text-slate-300'
         )}>Analyzing Server Data</p>
     </div>
 );
 
-// Empty State with Dark Theme Support
+// Empty State with Glass Theme Support
 export const EmptyState = ({ title, message, icon: Icon = ShoppingBag, dark = false }) => (
     <div className={cn(
-        'flex flex-col items-center justify-center py-24 text-center rounded-[2.5rem] border-2 border-dashed',
-        dark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-100/80'
+        'flex flex-col items-center justify-center py-24 text-center rounded-[2.5rem] border-2 border-dashed transition-all',
+        dark
+            ? 'bg-white/5 border-white/10 backdrop-blur-md'
+            : 'bg-white border-slate-100/80'
     )}>
         <div className={cn(
-            'p-8 rounded-[2rem] mb-6 shadow-inner',
-            dark ? 'bg-slate-700/50 text-slate-600' : 'bg-slate-50 text-slate-300'
+            'p-8 rounded-[2rem] mb-6 shadow-inner transition-transform hover:scale-110',
+            dark
+                ? 'bg-white/10 text-white border border-white/10'
+                : 'bg-slate-50 text-slate-300'
         )}>
-            <Icon size={56} />
+            <Icon size={56} className="drop-shadow-md" />
         </div>
         <h3 className={cn('text-xl font-black mb-2 tracking-tight', dark ? 'text-white' : 'text-slate-900')}>{title}</h3>
-        <p className={cn('max-w-xs text-sm font-semibold leading-relaxed tracking-tight', dark ? 'text-slate-400' : 'text-slate-400')}>{message}</p>
+        <p className={cn('max-w-xs text-sm font-semibold leading-relaxed tracking-tight', dark ? 'text-white/50' : 'text-slate-400')}>{message}</p>
     </div>
 );

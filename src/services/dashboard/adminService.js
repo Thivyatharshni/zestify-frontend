@@ -13,4 +13,6 @@ export const adminService = {
     deleteDeliveryPartner: (id) => api.delete(`/admin/delivery/${id}`),
     getOrders: () => api.get('/admin/orders'),
     getStats: () => api.get('/admin/stats'),
+    getNotifications: () => api.get('/admin/notifications'),
+    updateProfile: (data) => api.patch('/admin/profile', data),
 };
